@@ -6,9 +6,9 @@
 
 证明：
 
-设每一状态下水槽面积为 $$S (i,  j)$$ $$S(i,j),  (0<=i<j<n)$$，由于水槽的实际高度由两板中的短板决定，则可得面积公式 $$S(i,j)=min(h[i],h[j])×(j−i)$$。 
+设每一状态下水槽面积为 $S (i,  j) (0<=i<j<n)$，由于水槽的实际高度由两板中的短板决定，则可得面积公式 $S(i,j)=min(h[i],h[j])×(j−i)$. 
 
-在每一个状态下，无论长板或短板收窄 1  格，都会导致水槽 底边宽度 − 1 ： 若向内移动短板，水槽的短板 $$min(h[i],h[j])$$ 可能变大，因此水槽面积 $$S(i,j) $$可能增大。 若向内移动长板，水槽的短板 $$min(h[i],h[j]) $$不变或变小，下个水槽的面积一定小于当前水槽面积。
+在每一个状态下，无论长板或短板收窄 1  格，都会导致水槽 底边宽度 − 1 ： 若向内移动短板，水槽的短板 $min(h[i],h[j])$ 可能变大，因此水槽面积 $S(i,j) $可能增大。 若向内移动长板，水槽的短板 $min(h[i],h[j])$不变或变小，下个水槽的面积一定小于当前水槽面积。
 
 以上保证我们一定可以遍历到最优解；
 
@@ -148,9 +148,7 @@ public:
 
 也就是说只要左边的字母小于右边的字母， 那么左边的字母表示的就是负值；
 
-{% hint style="info" %}
-IX = 5 - 1; XC = 100 - 10; ...
-{% endhint %}
+> **_NOTE:_** IX = 5 - 1; XC = 100 - 10; ...
 
 ```cpp
 class Solution {
@@ -220,12 +218,9 @@ public:
 
  重复问题主要出现在一下几个地方：
 
-{% hint style="info" %}
-1. 枚举起点时候 a a b 在枚举前一个a 的时候就考虑到了后面的情况 同时包含了a a 同时出现的情况 这个时候不必枚举后面一个a；
-{% endhint %}
+> **_NOTE:_** 1. 枚举起点时候 a a b 在枚举前一个a 的时候就考虑到了后面的情况 同时包含了a a 同时出现的情况 这个时候不必枚举后面一个a；
 
-{% hint style="info" %}
-2. 在得到答案的时候 a bbb xxx ccc 已经得到一个答案a b c 之后 重复的b c 都可以直接过掉；
+> **_NOTE:_** 2. 在得到答案的时候 a bbb xxx ccc 已经得到一个答案a b c 之后 重复的b c 都可以直接过掉；
 {% endhint %}
 
 记住这两个过滤重复元素的地方就可以了；
@@ -381,5 +376,52 @@ public:
 
 ####  19 - 删除链表的倒数第N个节点
 
+可能会删除头结点 -> 虚拟头结点
+先找到倒数第k-1个节点 使其指向k+1个节点
 
+```cpp
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int k) {
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+
+        int n = 0;
+        for(auto p = dummy; p; p = p->next) n++;
+        ListNode* cur = dummy;
+        
+        for(int i = 0; i < n - k - 1; i++)
+            cur = cur->next;
+        
+        cur->next = cur->next->next;
+        return dummy->next;
+    }
+};
+```
+
+#### 20 - 有效的括号
+用栈来实现
+可以发现ASCII码中 ( 与 ) 差1 [ 与 ] { 与 } 差2，所以可以直接用字符差值是否在2以内判断是否匹配
+这里用模拟栈会更快一点
+```cpp
+class Solution {
+public:
+    bool isValid(string s) {
+        unordered_set<char> left = {'(', '[', '{'};
+        // stack
+        char stack[5000];
+        int tt = 0;
+        for(const char& c : s)
+        {
+            if (left.count(c))  stack[++tt] = c;
+            else
+            {
+                if(tt && abs(stack[tt] - c) <= 2) tt--;
+                else return false;
+            }
+        }
+        return tt == 0;
+    }
+};
+```
 
