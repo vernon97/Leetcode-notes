@@ -5,7 +5,17 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 21:48:53
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-22 19:46:52
+ * @LastEditTime: 2020-11-22 21:26:26
+ * @FilePath: /Leetcode-notes/week03.md
+-->
+<!--
+ * @Description: 
+ * @Versions: 
+ * @Author: Vernon Cui
+ * @Github: https://github.com/vernon97
+ * @Date: 2020-11-20 21:48:53
+ * @LastEditors: Vernon Cui
+ * @LastEditTime: 2020-11-22 20:50:10
  * @FilePath: /Leetcode-notes/week03.md
 -->
 # Week 03 - Leetcode 21 - 30
@@ -202,7 +212,7 @@ public:
 #### 28 - 实现strStr()
 
 复习一下KMP (永远记不住KMP)🆘
-KMP的数组下标从1开始 定义 ne[1] = 0， ne[i] 表示p[1...i]前后缀中最长重叠的个数...;
+KMP的数组下标从1开始 定义 ne[1] = 0， ne[i] 表示p[1...i]前后缀中最长重叠的长度（不算自己）...;
 背一下下面的这个
 __1. 求ne数组__
 
@@ -258,3 +268,55 @@ public:
 };
 ```
 
+#### 29 - 两数相除
+
+只能用加减法.. 快速幂的思想
+复习一下快速幂
+
+```cpp
+int qmi(int m, int k, int p)
+{
+    int res = 1 % p, t = m;
+    while(k)
+    {
+        if(k & 1) res = (LL) res * t % p;
+        t = (LL) t * t % p;
+        k >>= 1;
+     }
+}
+```
+
+这里快速幂是乘法-从小到大，除法反过来从大到小枚举
+这里边界情况还很多的 尤其要注意的是溢出问题
+比如 int -2^31取模就会溢出 所以abs的时候要强转
+1 << i 这里是先按int左移 如果超>= 32位就会溢出
+实际会按照 i% 32 进行位移
+
+```cpp
+typedef long long LL;
+class Solution {
+public:
+    int divide(int x, int y) {
+        // 不用乘除法
+        vector<LL> exp;
+        bool is_minus = false;
+        if(x < 0 && y > 0 || x > 0 && y < 0) is_minus = true;
+        LL a = abs((LL)x), b = abs((LL)y);
+        for(LL i = b; i <= a; i = i + i)
+            exp.push_back(i);
+        LL res = 0, i = b;
+        cout<<exp.size() <<endl;
+        for(int i = exp.size() - 1; i >= 0; i--)
+        {
+            if(a >= exp[i])
+            {
+                a -= exp[i];
+                res += 1ll << i;
+            }
+        }
+        if(is_minus) res = -res;
+        if(res > INT_MAX || res < INT_MIN)  return INT_MAX;
+        else return res;
+    }
+};
+```
