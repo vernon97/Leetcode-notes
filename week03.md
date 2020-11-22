@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 21:48:53
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-21 00:21:11
+ * @LastEditTime: 2020-11-22 18:23:33
  * @FilePath: /Leetcode-notes/week03.md
 -->
 # Week 03 - Leetcode 21 - 30
@@ -98,3 +98,71 @@ public:
     }
 };
 ```
+
+#### 24 - 两两交换链表中的节点
+
+这种链表题在纸上画一画指针是怎么倒腾的；
+
+```cpp
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* dummy = new ListNode(0), *cur = dummy;
+        dummy->next = head;
+        while(cur->next && cur->next->next)
+        {
+            ListNode* a = cur->next, *b = a->next;
+            a->next = b->next;
+            cur->next = b;
+            b->next = a;
+            cur = a;
+        }
+        return dummy->next;
+    }
+};
+```
+
+#### 25 - K个一组反转链表
+
+![avatar](figs/01.png)
+
+1. 是否剩余k个
+2. 内部指向反转
+3. 头尾指向调整
+
+```cpp
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode* dummy = new ListNode(0), *cur = dummy;
+        dummy->next = head;
+        while(check(cur, k))
+        {
+
+            ListNode* a = cur->next, *b = a->next;
+            // 1. 内部指向反转
+            for(int i = 0; i < k - 1; i++)
+            {  
+                ListNode* c = b->next; // 先存下来 避免找不着了
+                b->next = a;
+                a = b, b = c;
+            }
+            // 2. 首尾处理
+            ListNode* c = cur->next;
+            cur->next = a;
+            c->next = b;
+            cur = c; 
+        }
+        return dummy->next;
+    }
+    bool check(ListNode* p, int k)
+    {
+        for(int i = 0; i <= k; i++, p = p->next)
+            if(!p) return false;
+        return true;
+    }
+};
+```
+
+#### 26 - 删除排序数组中的重复项
+
