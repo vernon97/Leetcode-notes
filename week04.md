@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-22 21:28:13
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-23 22:10:11
+ * @LastEditTime: 2020-11-23 22:46:20
  * @FilePath: /Leetcode-notes/week04.md
 -->
 # Week 04 - Leetcode 31 - 40
@@ -148,14 +148,19 @@ public:
 #### 33 - 搜索旋转排序数组
 
 二分一把梭
+![avatar](figs/04.jpeg)
 
+对于nums仅有一个元素的情况而言，后面有可能出现`l = 1`但是`r = 0`的情况的;
+所以最后的提交要写 nums[r]而不是nums[l];
+
+最后下面刚好用了两种不同的二分模板，边界问题记住 __有加就有减__ 就好了
 
 ```cpp
 class Solution {
 public:
     int search(vector<int>& nums, int target) {
         if(nums.empty()) return -1;
-        // 二分吧
+        // 1. 二分查找分界线
         int l = 0, r = nums.size() - 1;
         while(l < r)
         {
@@ -163,8 +168,10 @@ public:
             if (nums[mid] >= nums[0])   l = mid;
             else r = mid - 1;
         }
+        // 左边的一段 or 右边的一段
         if(target >= nums[0]) l = 0; // r = r;
         else l++, r = nums.size() - 1;
+        // 正常的二分查找
         while(l < r)
         {
             int mid = l + r >> 1;
@@ -172,6 +179,63 @@ public:
             else l = mid + 1; 
         }
         return nums[r] == target ? l : -1;
+    }
+};
+```
+
+#### 34 - 在排序数组中查找元素的第一个和租后一个位置
+
+二分一把梭
+
+```cpp
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> res = {-1, -1};
+        if(nums.empty()) return res; 
+        // 二分左边界
+        int l = 0, r = nums.size() - 1;
+        while(l < r)
+        {
+            int mid = l + r >> 1;
+            if(nums[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+
+        if(nums[l] != target) return res;
+        // 二分右边界
+        else res[0] = l;
+        r = nums.size() - 1;
+        while(l < r)
+        {
+            int mid = l + r + 1 >> 1;
+            if(nums[mid] <= target) l = mid;
+            else r = mid - 1;
+        }
+        res[1] = l;
+        return res;
+    }
+};
+```
+
+#### 35 - 搜索插入位置
+
+基础二分，唯一注意一下二分到右端点的时候， 如果`nums[l] < target`的话，l++才是最终插入的位置；
+
+```cpp
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        if(nums.empty()) return 0;
+        int l = 0, r = nums.size() - 1;
+        while(l < r)
+        {
+            int mid = l + r >> 1;
+            if(nums[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+        if(nums[l] < target) l++;
+        return l;
     }
 };
 ```
