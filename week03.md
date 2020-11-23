@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 21:48:53
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-22 21:26:26
+ * @LastEditTime: 2020-11-23 17:01:17
  * @FilePath: /Leetcode-notes/week03.md
 -->
 <!--
@@ -305,7 +305,6 @@ public:
         for(LL i = b; i <= a; i = i + i)
             exp.push_back(i);
         LL res = 0, i = b;
-        cout<<exp.size() <<endl;
         for(int i = exp.size() - 1; i >= 0; i--)
         {
             if(a >= exp[i])
@@ -317,6 +316,110 @@ public:
         if(is_minus) res = -res;
         if(res > INT_MAX || res < INT_MIN)  return INT_MAX;
         else return res;
+    }
+};
+```
+
+#### 30 - 串联所有单词的字串
+![avatar](figs/02.jpeg)
+
+__1. substr版 o(w*n)__
+
+```cpp
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> res;
+        if(words.empty()) return res;
+        int n = s.size(), m = words.size(), w = words[0].size();
+        unordered_map<string, int> tot;
+        for(string& word: words)
+            tot[word]++;
+        // 枚举余数？
+        for(int i = 0; i < w; i++)
+        {
+            int suc = 0;
+            unordered_map<string, int> window;
+            for(int j = i; j + w <= n; j += w)
+            {
+                if(j >= i + m * w)
+                {
+                    string cur = s.substr(j - m * w, w);
+                    window[cur]--;
+                    if(window[cur] < tot[cur]) 
+                        suc--;
+                }
+                string cur = s.substr(j, w);
+                window[cur] ++;
+                if(window[cur] <= tot[cur])
+                    suc++;
+                if(suc == m)
+                    res.push_back(j - (m - 1) * w);
+            }
+        }
+        return res;
+    }
+};
+```
+
+__2. 字符串哈希版 o(n)__
+
+```cpp
+typedef unsigned long long ULL;
+class Solution {
+public:
+    static const int base = 131;
+public:
+    ULL get(ULL h[], ULL p[], int l, int r)
+    {
+        return h[r] - h[l - 1] * p[r - l + 1];
+    }
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> res;
+        if(words.empty()) return res;
+        int n = s.size(), m = words.size(), w = words[0].size();
+        s = ' ' + s;
+        ULL h[n + 1], p[n + 1];
+        memset(h, 0, sizeof h);
+        // 1. 字符串哈希 -> s
+        p[0] = 1;
+        for(int i = 1; i <= n; i++)
+        {
+            h[i] = h[i - 1] * base + s[i] - 'a' + 1;
+            p[i] = p[i - 1] * base;
+        }
+        // 2. 字符串哈希 -> words
+        unordered_map<ULL, int> tot;
+        for(string& word: words)
+        {
+            ULL hash = 0;
+            for(auto c: word)
+                hash = hash * base + c - 'a' + 1;
+            tot[hash]++;
+        }
+        // // 枚举余数？
+        for(int i = 1; i <= w; i++)
+        {
+            int suc = 0;
+            unordered_map<ULL, int> window;
+            for(int j = i; j + w <= n + 1; j += w)
+            {
+                if(j >= i + m * w)
+                {
+                    ULL cur = get(h, p, j - m * w, j - (m - 1) * w - 1);
+                    window[cur]--;
+                    if(window[cur] < tot[cur]) 
+                        suc--;
+                }
+                ULL cur = get(h, p, j, j + w - 1);
+                window[cur] ++;
+                if(window[cur] <= tot[cur])
+                    suc++;
+                if(suc == m)
+                    res.push_back(j - (m - 1) * w - 1);
+            }
+        }
+        return res;
     }
 };
 ```
