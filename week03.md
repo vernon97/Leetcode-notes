@@ -323,6 +323,7 @@ public:
 #### 30 - 串联所有单词的字串
 ![avatar](figs/02.jpeg)
 
+这里的额外复杂度是substr操作所带来的, C++17中引入的`std::string_view`可以一定程度上解决这个问题； `string_view  sv = s`
 __1. substr版 o(w*n)__
 
 ```cpp
