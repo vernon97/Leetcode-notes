@@ -5,12 +5,13 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-24 20:13:43
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-24 21:27:01
+ * @LastEditTime: 2020-11-25 21:31:38
  * @FilePath: /Leetcode-notes/week05.md
 -->
 # Week 05 - Leetcode 41 - 50
 
 #### 41 - 缺失的第一个正数
+
 ```diff
 + 原地Hash
 ```
@@ -42,3 +43,125 @@ public:
     }
 };
 ```
+
+#### 42 - 接雨水
+
+```diff
++ 单调栈
+```
+
+__按列划分__ 本题可以从左到右扫描一遍记录左边比i高的元素高度， 从右到左扫描一遍记录右边比高的元素高度，然后累加即可。
+
+__按行划分__ 这里利用单调栈维护左边第一个比他高的元素的下标
+
+1. 维护严格单调递减的单调栈。在每次检查栈顶要出栈时，`i`为右边第一个比 `st.top()` 不低的矩形，`st.top()` 弹出栈顶，并将其记为 `top`。
+
+2. 假设此时栈中仍然存在矩形，现在 `st.top()`（弹栈后的栈顶）、`top` 与 `i` 三个位置构成一个 U 型，其中 `top` 位置代表 U 型的底部，此时可以计算出该 U 型所能接受的水的面积为`(i - st.top() - 1) * (min(height[st.top()], height[i]) - height[top])`。
+   
+3. 最后当前矩形进栈。
+
+![avatar](figs/05.jpeg)
+
+```cpp
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int res = 0, n = height.size(), tt = -1;
+        if(n < 3) return 0;
+        int stk[n];
+        for(int i = 0; i < n; i++)
+        {
+            while(tt != -1 && height[stk[tt]] <= height[i])
+            {
+                int top = stk[tt--];
+                if(tt == -1) break;
+                res += (i - stk[tt] - 1) * (min(height[stk[tt]], height[i]) - height[top]);
+            }
+            stk[++tt] = i;
+        }
+        return res;
+    }
+};
+```
+
+#### 43 - 字符串相乘
+
+```diff
++ 高精度乘法
+```
+
+![avatar](figs/06.jpeg)
+
+```cpp
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        int n = num1.size(), m = num2.size();
+        vector<int> A, B,  C(n + m);
+        for(int i = n - 1; i >= 0; i--) A.push_back(num1[i] - '0');
+        for(int i = m - 1; i >= 0; i--) B.push_back(num2[i] - '0');
+
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+                C[i + j] += A[i] * B[j];
+        // 处理进位
+        for(int i = 0, t = 0; i < C.size(); i++) 
+        {
+            t += C[i];
+            C[i] = t % 10;
+            t /= 10;
+        }
+        // 找到结果首位
+        int k = C.size() - 1;
+        while(k > 0 && !C[k]) k--;
+        // 写答案 直接stringstream写
+        stringstream ss;
+        while(k >= 0) ss << C[k--];
+        return ss.str();
+    }
+};
+```
+
+#### 44 - 通配符匹配
+
+```diff
++ 动态规划
+```
+
+和第十题：正则表达式匹配是类似的，都是动态规划；
+
+`f(i, j)` 表示 `s[1..i]` 和 `p[1..j]`匹配 分为 `p[j]== '*'` 和 `p[j] != '*'` 两种
+
+__不是 *__ : `f[i][j] = f[i - 1][j - 1] && (s[i] == p[j] || p[j] == '?')`
+__是 *__ : 枚举 * 可以代替多少个字符
+`f[i][j] = f[i][j - 1] || f[i - 1][j - 1] || f[i - 2][j - 1] ...`
+`f[i - 1][j] = f[i - 1][j - 1] || f[i - 2][j - 1] ...`
+所以 `f[i][j] == f[i][j - 1] || f[i - 1][j]`
+
+然后初始状态 `f[0][0] = true`， i 从0枚举 j 从1枚举;
+
+```cpp
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int n = s.size(), m = p.size();
+        s = ' ' + s, p = ' ' + p;
+        bool f[n + 1][m + 1];
+        memset(f, false, sizeof f);
+        f[0][0] = true;
+
+        for(int i = 0; i <= n; i++)
+            for(int j = 1; j <= m; j++)
+            {
+                if(p[j] != '*')
+                    f[i][j] = i && f[i - 1][j - 1] && (s[i] == p[j] || p[j] == '?');
+                else 
+                    f[i][j] = f[i][j - 1] || (i && f[i - 1][j]);
+            }
+        return f[n][m];
+    }
+};
+```
+
+#### 45 - 跳跃游戏II
+
