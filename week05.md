@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-24 20:13:43
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-25 21:31:38
+ * @LastEditTime: 2020-11-25 23:52:36
  * @FilePath: /Leetcode-notes/week05.md
 -->
 # Week 05 - Leetcode 41 - 50
@@ -165,3 +165,41 @@ public:
 
 #### 45 - 跳跃游戏II
 
+```diff
++ 动态规划 + 贪心优化
+```
+
+没加优化前这可以看成一个普通的动态规划问题 用`f[i]` 表示走到`i`的最小步数；
+
+```cpp
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int n = nums.size();
+        vector<int>f(n+1);
+        for(int i = 1;i < n;i++)
+        {
+            int t = INT_MAX;
+            // 枚举前面的边能走到i的最小步数
+            for(int j = 0;j < i;j++)
+            {
+                if(j + nums[j] >= i)
+                {
+                    t = min(t,f[j]+1);
+                }
+            }
+            f[i] = t;
+        }
+
+        return f[n-1];
+    }
+};
+```
+
+这样是``O(N^2)``的 复杂度, 对于本题而言是无法通过的，还要根据贪心发掘一些性质；
+显然`f`数组是单调的， 举个例子：
+
+![avatar](figs/07.jpeg)
+因此`f[i]`就变成了`0 1...1 2...2 3...3 ......`，在动态规划时瓶颈就在于更新每个点的最小值时需要遍历所有能跳到`i`的点，而有了单调性以后就可以用第一个能跳到`i`的点更新了，这里无论是取哪一个点跳到`i`，其最终的结果是一样的，但是取第一个点和取最后一个点所需要的步数可能不相同，所以尽量选择靠前的点，这样步数就可能会减少，贪心的思想。
+
+#### 46 - 全排列

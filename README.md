@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-24 20:14:01
+ * @LastEditTime: 2020-11-25 23:53:43
  * @FilePath: /Leetcode-notes/README.md
 -->
 # Table of contents
@@ -19,4 +19,4 @@
 * [Week 02 - Leetcode 11 - 20](week02.md)
 * [Week 03 - Leetcode 21 - 30](week03.md)
 * [Week 04 - Leetcode 31 - 40](week04.md)
-* [Week 05 - Leetcode 41 - 50](week04.md) ◀️ 
+* [Week 05 - Leetcode 41 - 50](week05.md) ◀️ 
