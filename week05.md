@@ -357,7 +357,7 @@ public:
 + 快速幂
 ```
 
-经典快速幂 注意一下边界情况 (i = INT_MIN 转整数的坑。。)
+经典快速幂 注意一下边界情况 (i = INT_MIN 转正数的坑。。)
 
 ```cpp
 typedef long long LL;
