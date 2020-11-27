@@ -337,3 +337,67 @@ public:
     }
 };
 ```
+
+#### 60 - 排序序列
+
+```diff
++ 计数DP
+```
+
+利用语法 next_permutation 也能过了 但是复杂度高
+
+```cpp
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        vector<int> res;
+        for(int i = 1; i <= n; i++) 
+            res.push_back(i);
+        while(--k)
+            next_permutation(res.begin(), res.end());
+        stringstream ss;
+        for(int x : res)
+            ss << x;
+        return ss.str();
+    }
+};
+```
+
+__计数DP__
+
+![avatar](figs/10.jpeg)
+
+```cpp
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        stringstream ss;
+        vector<int>  fact(n + 1, 1);
+        vector<bool> st(10);
+
+        // 计算阶乘
+        for(int i = 1; i <= n; i++)
+            fact[i] = fact[i - 1] * i;
+        
+        for(int i = 0; i < n; i++)
+        {
+            int f = fact[n - i - 1];
+            for(int j = 1; j <= n; j++)
+            {
+                if(!st[j])
+                {
+                    if(f < k) k -= f;
+                    else
+                    {
+                        ss << j;
+                        st[j] = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return ss.str();
+    }
+};
+```
+
