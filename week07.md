@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-27 16:49:09
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-29 00:24:08
+ * @LastEditTime: 2020-11-29 18:10:31
  * @FilePath: /Leetcode-notes/week07.md
 -->
 # Week 07 - Leetcode 61 - 70
@@ -168,3 +168,101 @@ public:
 ```
 
 #### 68 - 文本左右对齐
+
+这是一道模拟题;
+
+![avatar](figs/13.jpeg)
+
+```cpp
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        vector<string> res;
+        for(int i = 0; i < words.size(); i++)
+        {
+            int j = i + 1;
+            int len = words[i].size(), cur_len = 0;
+            while(j < words.size() && len + 1 + words[j].size() <= maxWidth)
+                len += words[j++].size() + 1;
+            
+            stringstream line;
+            // 最后一行或一行只有一个单词 -> 左对齐
+            if(j == words.size() || j == i + 1)
+            {
+                line << words[i];
+                cur_len += words[i].size();
+                for(int k = i + 1; k < j; k ++)
+                    line << ' ' << words[k], cur_len += 1 + words[k].size();
+                if(maxWidth > cur_len) line << string(maxWidth - cur_len, ' ');
+            }
+            // 剩下的情况 -> 左右对齐
+            else
+            {
+                int cnt = j - i - 1, r = maxWidth - len + cnt; // r 是剩下的空格数；
+                line << words[i];
+                int k = 0;
+                while(k < r % cnt) line << string(r / cnt + 1, ' ') << words[i + k + 1], k++;
+                while(k < cnt) line << string(r / cnt, ' ') << words[i + k + 1], k++;
+            }
+            res.push_back(line.str());
+            i = j - 1;
+        }
+        return res;
+    }
+};
+```
+
+#### 69 - x 的平方根
+
+```diff
++ 二分
+```
+
+这里的二分是下取整，相当于找到一个最大的y 使得`y * y <= x`
+
+用乘法会有溢出问题 -> 转成除法
+
+INT_MAX + 1 会溢出 -> 转成 long long
+
+```cpp
+class Solution {
+public:
+    int mySqrt(int x) {
+        if(!x) return x;
+        // 二分
+        int l = 0, r = x;
+        while(l < r)
+        {
+            int mid = (long long) l + r + 1 >> 1;
+            if(mid <= x / mid) l = mid;
+            else r = mid - 1;
+        }
+        return l;
+    }
+};
+```
+
+#### 70 - 爬楼梯
+
+```diff
++ DP
+```
+
+`f[i] = f[i - 1] + f[i - 2];` // 斐波那契数列 从走一步or 走两步转移过来
+
+```cpp
+class Solution {
+public:
+    int climbStairs(int n) {
+        // 排列组合
+        int f0 = 0, f1 = 1, f= 1;
+        for(int i = 0; i < n; i++)
+        {
+            f = f0 + f1;
+            f0 = f1;
+            f1 = f;
+        }
+        return f;
+    }
+};
+```
