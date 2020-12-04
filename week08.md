@@ -5,8 +5,8 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-29 18:13:53
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-01 00:18:27
- * @FilePath: /Leetcode-notes/week08.md
+ * @LastEditTime: 2020-12-04 22:13:09
+ * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week08.md
 -->
 # Week 08 - Leetcode 71 - 80
 
@@ -314,6 +314,141 @@ public:
                 path.pop_back();
             }
         }
+    }
+};
+```
+
+#### 78 - 子集
+
+**递归子集**：枚举每个点 选 or 不选
+
+```cpp
+class Solution {
+public:
+    int n;
+    vector<vector<int>> res;
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {  
+        if(nums.empty()) return res;
+        n = nums.size();  
+        // 每个元素 选 or 不选
+        vector<int> path;
+        dfs(0, nums, path);
+        return res;
+    }
+
+    void dfs(int u,vector<int>& nums,vector<int>& path)
+    {
+        if(u == n)
+            res.push_back(path);
+        else
+        {
+            path.push_back(nums[u]);
+            dfs(u + 1, nums, path);
+            path.pop_back();
+            dfs(u + 1, nums, path);
+        }
+    }
+};
+```
+
+相较于这样的递归的做法，枚举子集更重要的方式：**二进制枚举**
+
+每一个二进制数，表示选 or 不选； 从`0`枚举到 `2^n - 1`
+
+举例来说 `010 -> [2]`, `101 -> [1, 3]`
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {  
+        vector<vector<int>> res;
+        if(nums.empty()) return res;
+        int n = nums.size();  
+        // 每个元素 选 or 不选
+        for(int i = 0; i < 1 << n; i++)
+        {
+            vector<int> path;
+            for(int j = 0; j < n; j++)
+            {
+                if(i >> j & 1) path.push_back(nums[j]);
+            }
+            res.push_back(move(path));
+        }
+        return res;
+    }
+};
+```
+
+#### 79 - 单词搜索
+
+简单搜索题
+
+```cpp
+class Solution {
+public:
+    int n, m, l;
+    vector<vector<bool>> st;
+    int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1};
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+        n = board.size(), m = board[0].size(), l = word.size();
+        st = vector<vector<bool>>(n, vector<bool>(m));
+        char start = word[0];
+        // 枚举起点
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+                if(board[i][j] == start)
+                {
+                    st[i][j] = true;
+                    // 枚举扩展
+                    if(dfs(i, j, 1, st, board, word))
+                        return true;
+                    st[i][j] = false;
+                }
+        return false;
+    }
+
+    bool dfs(int si, int sj, int u, vector<vector<bool>>& st, vector<vector<char>>& board, string& word)
+    {
+        if(u == l)
+            return true;
+        else
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                int x = si + dx[i], y = sj + dy[i];
+                if(x < 0 || x >= n || y < 0 || y >= m) continue;
+                if(st[x][y]) continue;
+                if(board[x][y] != word[u]) continue;
+                st[x][y] = true;
+                if(dfs(x, y, u + 1, st, board, word)) return true;
+                st[x][y] = false;
+            }
+            return false;
+        }
+    }
+};
+```
+
+#### 80 - 删除排序数组中的重复项ii
+
+和上一个删除重复项的题很像 都是用双指针过滤不合法情况
+
+```cpp
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        // 双指针 i k 怎么判断nums[i] 是否有效?
+        int n = nums.size(), k = 0;
+        if(n <= 2) return n;
+        for(int i = 0; i < n; i++)
+        {
+            if(i + 2 < n && nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2])
+                 continue;
+            nums[k++] = nums[i];
+        }
+        return k;
     }
 };
 ```
