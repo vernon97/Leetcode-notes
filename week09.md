@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-04 22:13:27
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-07 22:02:32
+ * @LastEditTime: 2020-12-07 22:28:53
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week09.md
 -->
 # Week 09 - Leetcode 81 - 90
@@ -149,4 +149,56 @@ public:
 ```
 
 #### 85 - 最大矩形
+
+这题思路还挺难的，实际是上一个题的扩展；
+
+![avatar](figs/17.jpeg)
+heights可以逐层递推得到
+
+```cpp
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int res = 0;
+        if(matrix.empty() || matrix[0].empty()) return res;
+        int n = matrix.size(), m = matrix[0].size();
+        vector<int> heights(m, 0);
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < m; j++)
+                if(matrix[i][j] == '1') heights[j]++;
+                else heights[j] = 0;
+            res = max(res, largestRectangleArea(heights));
+        }
+        return res;
+    }
+    int largestRectangleArea(vector<int>& heights) {
+        // 单调栈 左边第一个比他小的元素 右边第一个比他小的元素
+        int res = 0, n = heights.size();
+        if(!n) return res;
+        vector<int> left(n), right(n);
+        stack<int> stk;
+        for(int i = 0; i < n; i++)
+        {
+            while(stk.size() && heights[stk.top()] >= heights[i]) stk.pop();
+            if(stk.empty()) left[i] = -1;
+            else left[i] = stk.top();
+            stk.push(i);
+        }
+        stack<int>().swap(stk);
+        for(int i = n - 1; i >= 0; i--)
+        {
+            while(stk.size() && heights[stk.top()] >= heights[i]) stk.pop();
+            if(stk.empty()) right[i] = n;
+            else right[i] = stk.top();
+            stk.push(i);
+        }
+        for(int i = 0; i < n; i++)
+            res = max(res, (right[i] - left[i] - 1) * heights[i]);      
+        return res; 
+    }
+};
+```
+
+#### 86 - 分隔链表
 
