@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-04 22:13:27
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-07 22:28:53
+ * @LastEditTime: 2020-12-08 20:27:31
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week09.md
 -->
 # Week 09 - Leetcode 81 - 90
@@ -202,3 +202,170 @@ public:
 
 #### 86 - 分隔链表
 
+实际上是快排的一部分; 方法是开两个链表，最后拼起来；
+
+```cpp
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode* left = new ListNode(0), *right = new ListNode(0);
+        ListNode* lt = left, *rt = right, *cur = head;
+        while(cur)
+        {
+            if(cur->val < x)
+                lt = lt->next = cur;
+            else
+                rt = rt->next = cur;
+            cur = cur->next; 
+        }
+        lt->next = right->next;
+        rt->next = nullptr;
+        return left->next;
+    }
+};
+```
+
+#### 87 - 扰乱字符串
+
+```diff
++ 搜索
+```
+
+递归判断两个字符串是否可以相互转化。
+
+**首先判断两个字符串的字符集合是否相同**，如果不同，则两个字符串一定不可以相互转化。
+
+**然后枚举第一个字符串左半部分的长度**，分别递归判断两种可能的情况：
+
+**该节点不发生翻转**，则分别判断两个字符串的左右两部分是否分别可以相互转化；
+
+**该节点发生翻转**，则分别判断第一个字符串的左边是否可以和第二个字符串的右边相互转化，且第一个字符串的右边可以和第二个字符串的左边相互转化；
+
+> 复杂度分析：
+> an = 4(a1 + a2 + ... + an-1) 相当于每一个长度遍历四次 -> 裂项相减 复杂度是`o(5^n)`
+
+```cpp
+class Solution {
+public:
+    bool isScramble(string s1, string s2) {
+
+        if(s1.size() != s2.size()) return false;
+
+        if(s1 == s2) return true;
+        string bs1 = s1, bs2 = s2;
+        sort(bs1.begin(), bs1.end());
+        sort(bs2.begin(), bs2.end());
+        if(bs1 != bs2) return false;
+        int n = s1.size();
+        // 这里枚举的是长度
+        for(int i = 1; i <= n - 1; i++)
+        {
+            if(isScramble(s1.substr(0, i), s2.substr(0, i)) && isScramble(s1.substr(i), s2.substr(i)))
+                return true;
+            if(isScramble(s1.substr(0, i), s2.substr(n - i)) && isScramble(s1.substr(i), s2.substr(0, n - i)))
+                return true;
+        } 
+        return false;
+    }
+};
+```
+
+#### 88 - 合并两个有序链表
+
+二路归并，重点在于这个空间是如何省下的，不用另开数组而直接用`nums1`存储；
+
+从后往前写入`nums1` 就不会覆盖到还没统计的元素；
+
+```cpp
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        // 纯纯的二路归并
+        // 从后往前遍历 避免覆盖
+        int k = n + m - 1;
+        int i = m - 1, j = n - 1;
+        while(i >= 0 && j >= 0)
+        {
+            if(nums1[i] < nums2[j])
+                nums1[k--] = nums2[j--];
+            else
+                nums1[k--] = nums1[i--];
+        }
+        while(j >= 0)
+            nums1[k--] = nums2[j--];
+    }
+};
+```
+
+#### 89 - 格雷编码
+
+格雷编码的定义： `2^n`个二进制数围成一圈，使得相邻的两位只有一位不同；
+
+举例来说：`000 - 001 - 011 - 010 - 110 - 111 - 101 - 100`
+
+格雷码生成是有规律的 可以记一下：
+
+![avatar](figs/18.jpeg)
+
+镜像复制，前半段最后补0 后半段最后补1
+
+```cpp
+class Solution {
+public:
+    vector<int> grayCode(int n) {
+        vector<int> res(1 << n);
+        if(n == 0) return res;
+        res[1] = 1;
+        for(int i = 2; i <= n; i++)
+        {
+            int l = 1 << (i - 1);
+            // 1. 对称复制
+            for(int j = 0; j < l; j++)
+                res[2 * l - j - 1] = res[j];
+            // 2. 补位
+            for(int j = 0; j < l << 1; j++)
+                res[j] = 2 * res[j] + j / l; 
+        }
+        return res;
+    }
+};
+```
+
+#### 90 - 子集II
+
+枚举每个位置的数出现 or 不出现；
+
+这里重复去除和之前的方法都是一致的，同样的元素规定一个统一的出现顺序；
+
+这里对于重复元素的限制 必须按照顺序用 比如`[1,2,2]` 没用第一个`2`时候不允许用第二个`2`
+
+```cpp
+class Solution {
+public:
+    int n;
+    vector<vector<int>> res;
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        // 搜索每个元素要 or 不要；
+        // 这里对于重复元素的限制 必须按照顺序用 比如[1,2,2] 没用第一个2时候不允许用第二个2
+        n = nums.size();
+        vector<int> path;
+        sort(nums.begin(), nums.end());
+        dfs(0, -1, path, nums);
+        return res;
+    }
+    void dfs(int u, int last, vector<int>& path, vector<int>& nums)
+    {
+        if(u == n) res.push_back(path);
+        else
+        {
+            dfs(u + 1, last, path, nums);
+            // 和上一个数一样 且上一个数没选-> 不行🚫
+            if(u && nums[u - 1] == nums[u] && last != u - 1) return;
+            path.push_back(nums[u]);
+            dfs(u + 1, u, path, nums);
+            path.pop_back(); 
+        }
+    }
+};
+```
