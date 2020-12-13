@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-08 20:27:50
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-14 00:24:50
+ * @LastEditTime: 2020-12-14 00:53:51
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week10.md
 -->
 
@@ -244,10 +244,47 @@ public:
 
 #### 96 - 不同的二叉搜索树
 
-由`1~n`所有数形成的二叉搜索树的种类数是**卡特兰数** <img src="https://latex.codecogs.com/png.latex?  \frac{C_{2n}^{n}}{n + 1}">
+![avatar](figs/21.png)
 
-卡特兰数有两种形式：
-    1. 递推式：`f(n) = f(0) * f(n - 1) + f(1) * f(n - 2) + f(2) * f(n - 3) ... f(n - 1) * f(0)`
-    2. 组合数形式： <img src="https://latex.codecogs.com/png.latex?f(n)=C_{2n}^{n}-C_{2n}^{n - 1}=\frac{C_{2n}^{n}}{n + 1}">
+这里用到的就是递推形式， 实际上这里的二叉搜索树的个数就是由上面的递推式而来的；
 
-这里用到的就是递推形式， 实际上
+枚举根节点root, 然后遍历左右两边的可能性：这里的方案数量仅和区间的长度有关
+
+`f[n]`表示 n个节点的二叉搜索树共有多少种。
+状态转移：左子树可以有 `0,1,…n−1`个节点，对应的右子树有 `n−1,n−2,…,0`个节点，`f[n]`
+是所有这些情况的加和，所以 `f[n] = f[k] * f[n - 1 - k] (k = 0 .. n - 1]` (共有n - 1个节点分配给左右两边)
+
+1. __组合数__
+
+```cpp
+typedef unsigned long long ULL;
+class Solution {
+public:
+    int numTrees(int n) {
+        vector<vector<ULL>> f(2 * n + 1, vector<ULL>(2 * n + 1, 0));
+        for(int i = 0; i <= 2 * n; i++)
+            for(int j = 0; j <= min(i, n); j++)
+                if(!j) f[i][j] = 1;
+                else f[i][j] = f[i - 1][j] + f[i - 1][j - 1];
+        return static_cast<int>(f[2 * n][n] / (n + 1));
+        }
+};
+```
+
+2. __递推__
+
+```cpp
+class Solution {
+public:
+    int numTrees(int n) {
+            vector<int> f(n + 1);
+            f[0] = 1;
+            for(int i = 1; i <= n; i++)
+                for(int j = 1; j <= i; j++)
+                    f[i] += f[j - 1] * f[i - j];
+            return f[n];
+        }
+};
+```
+
+#### 97 - 交错字符串
