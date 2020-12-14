@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-08 20:27:50
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-14 00:53:51
+ * @LastEditTime: 2020-12-14 17:24:55
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week10.md
 -->
 
@@ -288,3 +288,187 @@ public:
 ```
 
 #### 97 - 交错字符串
+
+```diff
++ 动态规划
+```
+
+`f[i, j]` 表示s1的前i个字符和s2的前j个字符可以构成s3的前`i+j`个字符
+
+`f[i, j] == (s1[i] == s3[i + j] && f[i - 1][j]) || (s2[j] == s3[i + j] && f[i][j - 1])` 表示从s1构建或者从s2构建
+
+```cpp
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        int n1 = s1.size(), n2 = s2.size(), n3 = s3.size();
+        s1 = ' ' + s1, s2 = ' ' + s2, s3 = ' ' + s3;
+        if(n1 + n2 != n3) return false;
+        vector<vector<bool>> f(n1 + 1, vector<bool>(n2 + 1));
+        f[0][0] = true; // 初始状态
+        for(int i = 0; i <= n1; i++)
+            for(int j = 0; j <= n2; j++)
+                if(i != 0 || j != 0)
+                    f[i][j] = (i && s1[i] == s3[i + j] && f[i - 1][j]) || 
+                        (j && s2[j] == s3[i + j] && f[i][j - 1]);
+        return f[n1][n2];
+    }
+};
+```
+
+#### 98 - 验证二叉搜索树
+
+二叉搜索树的性质：中序遍历的结果一定是有序的，因此保存中序遍历的结果判断是否有序即可；
+
+这里复习一下迭代法求中序遍历
+
+```cpp
+class Solution {
+public:
+    vector<int> nums;
+public:
+    bool isValidBST(TreeNode* root) {
+        // 中序遍历判断有序
+        dfs(root);
+        for(int i = 0; i < nums.size(); i++)
+        {
+            if(i && nums[i] <= nums[i - 1])
+                return false;
+        }
+        return true;
+    }
+    void dfs(TreeNode* root)
+    {
+        stack<TreeNode*> stk;
+        while(root || stk.size())
+        {
+            while(root)
+            {
+                stk.push(root);
+                root = root->left;
+            }
+            root = stk.top();
+            stk.pop();
+            nums.push_back(root->val);
+            root = root->right;
+        }
+    }
+};
+```
+
+#### 99 - 恢复二叉搜索树
+
+**Morris遍历**
+
+二叉搜索树被错误的交换节点的时候，中序遍历会出现逆序对；
+
+也就是说找到逆序对就可以发现被错误交换的节点，在这里可能有两种情况：
+只有一个逆序对 就说明相邻两个元素被交换
+有两个逆序对，则说明第一个逆序对的第一个元素和第二个逆序对的第二个元素被交换；
+
+这里我们不用额外的空间去保存中序遍历的结果，而是直接在递归中记录上一个处理的节点prev；
+在中序遍历中每一个处理的节点
+
+```diff
+- dfs(root->left);
++ 在这处理节点
++ 也就是在这里被处理的顺序就是中序遍历的结果
++ 在这里记录prev即可
+- dfs(root->right);
+```
+
+**1. 空间复杂度o(n)**
+
+```cpp
+class Solution {
+public:
+    TreeNode* prev = new TreeNode(INT_MIN);
+    TreeNode* t1 = nullptr, *t2 = nullptr;
+public:
+    void recoverTree(TreeNode* root) {
+        dfs(root);
+        int tmp = t1->val;
+        t1->val = t2->val;
+        t2->val = tmp;
+    }
+    void dfs(TreeNode* root)
+    {
+        if(root == nullptr) return;
+        dfs(root->left);
+        if(prev->val > root->val && t1 == nullptr)
+            t1 = prev;
+        if(prev->val > root->val && t1 != nullptr)
+            t2 = root;
+        prev = root;
+        dfs(root->right);
+    }
+};
+```
+
+这样做的话实际是用递归栈存储了中序遍历的结果，空间复杂度还是`o(n)`的 要想实现`o(1)`的空间复杂度，需要利用Morris遍历；
+
+Morris遍历总的来说是把回溯的过程用额外的指针实现
+
+1. 没有左子树: 则直接遍历当前点，然后走到右儿子
+2. 如果当前节点有左儿子，则找当前节点的前驱。
+(1) 如果前驱节点的右儿子为空，说明左子树没遍历过，则进入左子树遍历，并将前驱节点的右儿子置成当前节点，方便回溯；
+(2) 如果前驱节点的右儿子为当前节点，说明左子树已被遍历过，则将前驱节点的右儿子恢复为空，然后打印当前节点的值，然后进入右子树继续遍历；
+
+```cpp
+class Solution {
+public:
+    TreeNode* first = nullptr, *second = nullptr, *last = nullptr;
+public:
+    void recoverTree(TreeNode* root) {
+        while(root)
+        {
+            if(!root->left)
+            {
+                // 遍历当前点
+                if(last && last->val > root->val)
+                {
+                    if(!first) first = last, second = root;
+                    else second = root;
+                }
+                last = root;
+                root = root->right;
+            }
+            else 
+            {
+                auto p = root->left;
+                while(p->right && p->right != root) p = p->right;
+                if(!p->right) p->right = root, root = root->left;
+                else {
+                    p->right = nullptr;
+                    // 遍历当前点
+                    if(last && last->val > root->val)
+                    {
+                        if(!first) first = last, second = root;
+                        else second = root;
+                    }
+                    last = root;
+                    root = root->right;
+                }
+            }
+        }
+        swap(first->val, second->val);
+    }
+};
+```
+
+#### 100 - 相同的树
+
+搜索就好了
+要么都不存在 要么都存在且val一致；
+
+```cpp
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        //如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的
+        if(!p && !q) return true;
+        if(!p || !q || p->val != q->val) return false;
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+    }
+};
+```
