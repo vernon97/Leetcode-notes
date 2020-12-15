@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-15 15:13:22
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-15 22:06:50
+ * @LastEditTime: 2020-12-15 23:30:04
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week12.md
 -->
 # Week 12 - Leetcode 111 - 120 
@@ -281,6 +281,54 @@ public:
             cur[i - 1] = 1;
         }
         return f[rowIndex % 2];
+    }
+};
+```
+
+#### 120 - 三角形最小路径和
+
+很经典的数字三角形动态规划问题；
+
+从上到下DP路径的话会有额外的路径可行性判断问题（左右两端）
+
+1. 从上到下遍历
+
+```cpp
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int n = triangle.size();
+
+        for(int i = 1; i < n; i++)
+            for(int j = 0; j <= i; j++)
+            {
+                if(j == 0)
+                    triangle[i][j] += triangle[i - 1][j];
+                else if (j == i)
+                    triangle[i][j] += triangle[i - 1][i - 1];
+                else
+                    triangle[i][j] += min(triangle[i - 1][j], triangle[i - 1][j - 1]);
+            }
+        int res = INT_MAX;
+        for(int i = 0; i < n; i++)
+           res = min(res, triangle[n - 1][i]);
+        return res;
+    }
+};
+```
+
+2. 从下到上遍历
+
+从下到上遍历可以消除这个额外的路径判断 不错这里要记住了
+
+```cpp
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        for(int i = triangle.size() - 2; i >= 0; i--)
+            for(int j = 0; j <= i; j++)
+                triangle[i][j] += min(triangle[i + 1][j], triangle[i + 1][j + 1]);
+        return triangle[0][0];
     }
 };
 ```
