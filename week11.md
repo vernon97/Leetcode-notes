@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-14 17:25:24
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-14 22:20:45
+ * @LastEditTime: 2020-12-15 15:12:24
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week11.md
 -->
 # Week 11 - Leetcode 101 - 110 
@@ -231,5 +231,128 @@ public:
 
 #### 107 - 二叉树的层次遍历ii
 
+正常层序遍历在反序就好了
 
+```cpp
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>> res;
+        queue<TreeNode*> q;
+        if(root == nullptr) return res;
+        q.push(root);
+        while(q.size())
+        {
+            vector<int> level;
+            int len = q.size();
+            while(len--)
+            {
+                auto t = q.front();
+                q.pop();
+                level.push_back(t->val);
+                if(t->left)  q.push(t->left);
+                if(t->right) q.push(t->right);
+            }
+            res.push_back(move(level));
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+```
+
+#### 108 - 将有序数组转换为二叉搜索树
+
+中序遍历有序 等价于 是二叉搜索树
+
+将一个按照升序排列的有序数组，转换为一棵高度平衡二叉搜索树;
+
+考察的是线段树或者平衡树的初始化方式, 即如何从数组初始化为平衡树 -> 从中间对半分开
+
+```cpp
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return build(nums, 0, nums.size() - 1);
+    }
+    TreeNode* build(vector<int>& nums, int l, int r)
+    {
+        if(l > r) return nullptr;
+        int mid = l + r >> 1;
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left  = build(nums, l, mid - 1);
+        root->right = build(nums, mid + 1, r);
+        return root;
+    }
+};
+```
+
+#### 109 - 有序链表转换为二叉搜索树
+
+和上面的题类似， 将链表从中点分开，然后分别递归构建左右子树即可；
+这里找中点利用的是快慢指针，只用遍历一次子链表即可找到中点；
+
+然后边界问题需要新建一个`dummy`指针指向头结点来实现，如果链表只剩下一个头结点要特判返回；
+
+将一个链表分成两段 就是将指向`mid`的指针置为`nullptr` 就可以实现；
+
+```cpp
+class Solution {
+public:
+    ListNode* dummy;
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        dummy = new ListNode(0);
+        dummy->next = head;
+        return build(head);
+    }
+    TreeNode* build(ListNode* head)
+    {
+        if(!head) return nullptr;
+        ListNode* fast = head, *slow = head, *prev = dummy;
+        // 快慢指针找中点
+        while(fast && fast->next)
+        {
+            prev = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        // 找到中点 新建root
+        TreeNode* root  = new TreeNode(slow->val);
+        // 如果中点是head 可以直接返回了
+        if(prev == dummy) return root;
+        // 链表分成两段
+        ListNode* right = slow->next;
+        prev->next = nullptr;
+        // 递归建树
+        root->left  = sortedListToBST(head);
+        root->right = sortedListToBST(right);
+        return root;
+    }
+};
+```
+
+#### 110 - 平衡二叉树
+
+递归搜索深度加判断即可
+
+```cpp
+class Solution {
+public:
+    bool ans = true;
+public:
+    bool isBalanced(TreeNode* root) {
+        dfs(root);
+        return ans;
+    }
+    int dfs(TreeNode* root)
+    {
+        if(!root) return 0;
+        int l = dfs(root->left);
+        int r = dfs(root->right);
+        if(abs(l - r) > 1) ans = false;
+        return max(l, r) + 1;
+    }
+};
+```
 
