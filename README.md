@@ -28,4 +28,5 @@
 * =========`100 ~ 200`==========
 * [Week 11 - Leetcode 101 - 110](week11.md)
 * [Week 12 - Leetcode 111 - 120](week12.md)
-* [Week 13 - Leetcode 121 - 130](week13.md) ◀️ 
+* [Week 13 - Leetcode 121 - 130](week13.md) 
+* [Week 14 - Leetcode 131 - 140](week14.md) ◀️ 

@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-15 23:30:24
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-18 21:31:56
+ * @LastEditTime: 2020-12-18 23:48:33
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week13.md
 -->
 # Week 13 - Leetcode 121 - 130
@@ -296,3 +296,111 @@ public:
     }
 };
 ```
+
+#### 128 - 最长连续序列
+
+首先将所有数字放入哈希表，遍历哈希表中的元素，因为要找连续的数字序列，因此可以通过向后枚举相邻的数字（即不断加一），判断后面一个数字是否在哈希表中即可。
+
+为了保证O(n)的复杂度，同时也为了避免重复枚举序列，因此只对序列的起始数字向后枚举（例如`[1,2,3,4]`，只对1枚举，2，3，4时跳过），因此需要判断一下是否是序列的起始数字（**即判断一下n-1是否在哈希表中**）。
+
+```cpp
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> S;
+        for(auto x: nums)
+            S.insert(x);
+        int res = 0;
+        for(auto x : nums)
+        {
+            if(S.count(x) && !S.count(x - 1))
+            {
+                int y = x;
+                while(S.count(y + 1)) y++;
+                res = max(res, y - x + 1);
+            }
+        }
+        return res;
+    }
+};
+```
+
+#### 129 - 求根到叶子节点数字之和
+
+树🌲上的遍历分为两种，从上到下和从下到上的； 从下到上就是经典的递归做返回值，这里从上倒下则是用参数传递的形式来完成；
+
+```cpp
+class Solution {
+public:
+    int ans;
+public:
+    int sumNumbers(TreeNode* root) {
+        if(!root) return 0;
+        dfs(root, 0);
+        return ans;
+    }
+    void dfs(TreeNode* root, int num)
+    {
+        num = 10 * num + root->val;
+        if(root->left == nullptr && root->right == nullptr) 
+        {
+            ans += num;
+        }
+        else
+        {
+            if(root->left) dfs(root->left, num);
+            if(root->right) dfs(root->right, num);
+        }
+    }
+};
+```
+
+#### 130 - 被围绕的区域
+
+搜索题了 这里可以在边界上的`O`做为起点 搜索，没搜到的都记作`X`就好了
+
+判重这里可以直接在原数组上改
+
+```cpp
+class Solution {
+public:
+    int n, m;
+    int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1};
+public:
+    void solve(vector<vector<char>>& board) {
+        if(board.empty() || board[0].empty()) return;
+        n = board.size(), m = board[0].size();
+        for(int i = 0; i < n; i++)
+        {
+            if(board[i][0] == 'O') dfs(i, 0, board);
+            if(board[i][m - 1] == 'O') dfs(i, m - 1, board);
+        }
+        for(int i = 0; i < m; i++)
+        {
+            if(board[0][i] == 'O') dfs(0, i, board);
+            if(board[n - 1][i] == 'O') dfs(n - 1, i, board);
+        }
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+            {
+                if(board[i][j] == '*')
+                    board[i][j] = 'O';
+                else
+                    board[i][j] = 'X';
+            }
+    }
+    void dfs(int x, int y, vector<vector<char>>& board)
+    {
+        board[x][y] = '*';
+        for(int i = 0; i < 4; i++)
+        {
+            int nx = x + dx[i], ny = y + dy[i];
+            if(nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+            if(board[nx][ny] != 'O') continue;
+            dfs(nx, ny, board);
+        }
+    }
+};
+```
+
+
