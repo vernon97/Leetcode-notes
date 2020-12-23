@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-18 23:49:16
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-19 20:51:35
+ * @LastEditTime: 2020-12-23 19:58:15
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week14.md
 -->
 # Week 14 - Leetcode 131 - 140
@@ -111,4 +111,119 @@ public:
 ```
 
 #### 133 - 克隆图
+
+分为两次 先拷贝点 再拷贝边；
+
+拷贝点要建立原始点和复制点的映射关系，遍历一遍图 （BFS/DFS) 注意遍历图要判重！
+
+然后拷贝每个点的边就可以了
+
+```cpp
+class Solution {
+public:
+    unordered_map<Node*, Node*> hash; // 原始点和拷贝点的映射
+public:
+    Node* cloneGraph(Node* node)
+    {
+        if(!node) return nullptr;
+        // 1. 复制所有点
+        dfs(node);
+        // 2. 复制所有边
+        for(auto& p : hash)
+        {
+            Node* origin = p.first, *cpy = p.second;
+            for(auto n : origin->neighbors)
+                cpy->neighbors.push_back(hash[n]);
+        }
+        return hash[node];
+    }
+    void dfs(Node* node)
+    {
+        hash[node] = new Node(node->val);
+        for(auto ver : node->neighbors)
+        {
+            if(hash.count(ver)) continue;
+            dfs(ver);
+        }
+    }
+};
+```
+
+#### 134 - 加油站
+
+```diff
++ 单调队列
+```
+
+首先对于这种环状数组问题常见的操作方式就是复制一遍 破环成链；
+
+`[1,2,3,4,5]`变成`[1,2,3,4,5,1,2,3,4,5]`, 再用一个长度为n的窗口 即为从不同起点开始的路径。
+
+每一个加油站`i` 能到达的花费实际上是`gas[i] - cost[i]` 才能开到下一站
+
+整段路程的花费实际上就是每一小段的花费的前缀和`s[j] - s[i]`，只要满足前缀和的最小值大于等于0就证明可以完整走完这一段路程。
+
+> 转化为滑动窗口求最小值的问题：**单调队列**
+
+枚举起点`i`, 对于`s[j] - s[i]` 而言 `i` 不变 实际上找的就是`s[j]`的在`[i ... i + n - 1]`中的最小值，这样我们需要从后往前维护单调队列才行（从前往后 `i` 后面的还没见过）
+
+这样最小值即为队首元素`s[q[hh]]`
+
+```cpp
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        if(gas.empty()) return -1;
+        int n = gas.size();
+        vector<int> s(2 * n + 2), q(2 * n + 2);
+        for(int i = 1; i <= n; i++)
+            s[i] = s[i + n] = gas[i - 1] - cost[i - 1];
+        // 1. 计算前缀和
+        for(int i = 1; i <= 2 * n; i++)
+            s[i] += s[i - 1];
+        // 2. 维护单调队列
+        // 这里求的是[i ... i + n - 1] 中的最小值 所以是包含 i的 区间最小值就是队列的队首元素 q[hh]
+        int hh = 0, tt = -1;
+        for(int i = 2 * n; i; i --)
+        {
+            if(hh <= tt && q[hh] > i + n - 1) hh++; 
+            while(hh <= tt &&  s[q[tt]] >= s[i]) tt--;
+            q[++tt] = i;
+            if(i <= n && s[q[hh]] >= s[i - 1]) return i - 1;       
+        }
+        return -1;
+    }
+};
+```
+
+#### 135 - 分发糖果
+
+这题的最优解是 左右两边
+
+```cpp
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int n = ratings.size();
+        vector<int> sl(n + 1), sr(n + 1);
+        for(int i = 0; i < n; i++)
+            if(i && ratings[i] > ratings[i - 1]) 
+                sl[i] = sl[i - 1] + 1;
+        for(int i = n - 1; i >= 0; i--)
+            if(i < n - 1 && ratings[i] > ratings[i + 1])
+                sr[i] = sr[i + 1] + 1;
+        int res = 0;
+        for(int i = 0; i < n; i++)
+            res += max(sl[i], sr[i]) + 1;
+        return res;
+    }
+};
+```
+
+
+
+
+
+
+
 
