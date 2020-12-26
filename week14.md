@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-18 23:49:16
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-23 19:58:15
+ * @LastEditTime: 2020-12-26 23:51:51
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week14.md
 -->
 # Week 14 - Leetcode 131 - 140
@@ -198,7 +198,12 @@ public:
 
 #### 135 - 分发糖果
 
-这题的最优解是 左右两边
+![avatar](figs/27.jpeg)
+
+这题实际上就是 每个小朋友得到的最少糖果数是根据左右两边 连续下降的次数 决定的；
+比如图上的情况 这个小朋友至少要得到3个 才能满足要求；
+
+按照这个想法, 分别统计左右两边 连续下降的次数 最后加起来得到答案即可
 
 ```cpp
 class Solution {
@@ -216,6 +221,54 @@ public:
         for(int i = 0; i < n; i++)
             res += max(sl[i], sr[i]) + 1;
         return res;
+    }
+};
+```
+
+#### 136 - 只出现一次的数字
+
+```diff
++ 位运算
+```
+
+> 相同两个数的异或值为0
+
+所以所有的数异或操作后，剩下的一个数字就是只出现一次的了；
+
+```cpp
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int res = 0;
+        for(auto n : nums)
+            res ^= n;
+        return res;
+    }
+};
+```
+
+#### 137 - 只出现一次的数字ii
+
+![avatar](figs/28.jpeg)
+
+主要是这个按位的状态转移方程怎么来的很奇怪
+
+> `one = (one ^ x) & (~two)`
+> `two = (two ^ x) & (~one)`
+
+理解这么做是对的就好了 
+
+```cpp
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int one = 0, two = 0;
+        for(auto x : nums)
+        {
+            one = (one ^ x) & (~two);
+            two = (two ^ x) & (~one);
+        }
+        return one;
     }
 };
 ```
