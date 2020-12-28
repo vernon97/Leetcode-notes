@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-18 23:49:16
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-26 23:51:51
+ * @LastEditTime: 2020-12-28 19:32:27
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week14.md
 -->
 # Week 14 - Leetcode 131 - 140
@@ -273,10 +273,195 @@ public:
 };
 ```
 
+#### 138 - 复制带随机指针的链表
 
+这个题和上一个克隆图是一样的 也是分两步 先复制Node 再复制指针
 
+同样也是建立一个原始Node 和 复制Node 的hash表
 
+```cpp
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        // 和上面的克隆图是类似的  都是分两步 先克隆node 再克隆指针
+        if(!head) return head;
+        unordered_map<Node*, Node*> hash;
+        // 1. 克隆Node
+        for(Node* t = head; t; t = t->next)
+        {
+            hash[t] = new Node(t->val);
+        }
+        // 2. 克隆指针
+        for(Node* t = head; t; t = t->next)
+        {
+            Node* t_cpy = hash[t];
+            if(t->next)   t_cpy->next   = hash[t->next];
+            if(t->random) t_cpy->random = hash[t->random];
+        }
+        return hash[head];
+    }
+};
+```
 
+但这个需要额外开一个哈希表去记录对应关系, 根据链表的特性可以节省这个空间；
 
+![avatar](figs/29.jpeg)
 
+```cpp
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        // 1. 复制next
+        for(Node* t = head; t; t = t->next->next)
+        {
+            Node* t_cpy = new Node(t->val);
+            t_cpy->next = t->next;
+            t->next = t_cpy;
+        }
 
+        // 2. 复制random
+        for(Node* t = head; t; t = t->next->next)
+            if(t->random)
+                t->next->random = t->random->next;
+        // 3. 拆分链表
+        Node* dummy = new Node(0), *cur = dummy;
+        for(Node* t = head; t; t = t->next)
+        {
+            Node* q = t->next;
+            cur = cur->next = q;
+            t->next = q->next;
+        }
+        return dummy->next;
+    }
+};
+```
+
+#### 139 - 单词拆分
+
+简单的动态规划，这里去substr带来的复杂度同样可以用字符串哈希来处理
+
+```cpp
+typedef unsigned long long ULL;
+class Solution {
+public:
+    vector<ULL> hs, hw, p;
+    vector<bool> f;
+public:
+    ULL get(int l, int r)
+    {
+        return hs[r] - hs[l - 1] * p[r - l + 1];
+    }
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size(), m = wordDict.size();
+        hs = vector<ULL>(n + 1, 0), hw = vector<ULL>(m + 1, 0), p = vector<ULL>(n + 1, 0);
+        f = vector<bool>(n + 1);
+        // 字符串哈希 初始化
+        p[0] = 1;
+        for(int i = 1; i <= n; i++)
+        {
+            hs[i] = hs[i - 1] * 131 + s[i - 1] - 'a' + 1;
+            p[i] = p[i - 1] * 131;
+        }
+        // 初始化 wordDict 的 哈希值
+        for(int i = 0; i < m; i++)
+        {
+            string sw = wordDict[i];
+            for(int j = 0; j < sw.size(); j++)
+            {
+                hw[i] = hw[i] * 131 + sw[j] - 'a' + 1;
+            }
+        }
+        // 状态转移
+        f[0] = true;
+        for(int i = 1; i <= n; i++)
+            for(int j = 0; j < m; j++)
+            {
+                int k = wordDict[j].size();
+                if(i >= k)
+                    f[i] = f[i] || (f[i - k] && get(i - k + 1, i) == hw[j]);
+            }
+        return f[n];
+    }
+};
+```
+
+#### 140 - 单词拆分ii
+
+上面的基础上额外记录一个从那个状态转移而来的，最后dfs枚举所有的组合即可；
+
+```cpp
+typedef unsigned long long ULL;
+class Solution {
+public:
+    vector<ULL> hs, hw, p;
+    vector<bool> f;
+    unordered_map<int, vector<int>> trans;
+    vector<string> res;
+public:
+    ULL get(int l, int r)
+    {
+        return hs[r] - hs[l - 1] * p[r - l + 1];
+    }
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size(), m = wordDict.size();
+        hs = vector<ULL>(n + 1, 0), hw = vector<ULL>(m + 1, 0), p = vector<ULL>(n + 1, 0);
+        f = vector<bool>(n + 1);
+        // 字符串哈希 初始化
+        p[0] = 1;
+        for(int i = 1; i <= n; i++)
+        {
+            hs[i] = hs[i - 1] * 131 + s[i - 1] - 'a' + 1;
+            p[i] = p[i - 1] * 131;
+        }
+        // 初始化 wordDict 的 哈希值
+        for(int i = 0; i < m; i++)
+        {
+            string sw = wordDict[i];
+            for(int j = 0; j < sw.size(); j++)
+            {
+                hw[i] = hw[i] * 131 + sw[j] - 'a' + 1;
+            }
+        }
+        // 状态转移
+        f[0] = true;
+        for(int i = 1; i <= n; i++)
+            for(int j = 0; j < m; j++)
+            {
+                int k = wordDict[j].size();
+                if(i >= k)
+                    if(f[i - k] && get(i - k + 1, i) == hw[j])
+                    {
+                        f[i] = true;
+                        trans[i].push_back(i - k);
+                    }
+            }
+        if(!f[n]) return res;
+        else
+        {
+            vector<int> path;
+            dfs(n, path, s);
+            return res;
+        }
+    }
+    void dfs(int u, vector<int>& path, string& s)
+    {
+        if(u == 0)
+        {
+            stringstream ss;
+            for(int i = path.size() - 1; i; i--)
+                ss << s.substr(path[i], path[i - 1] - path[i]) << ' ';
+            ss << s.substr(path[0]);
+            res.push_back(ss.str());
+        }
+        else
+        {
+            for(auto x : trans[u])
+            {
+                path.push_back(x);
+                dfs(x, path, s);
+                path.pop_back();
+            }
+        }
+    }
+};
+```
