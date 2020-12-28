@@ -5,13 +5,13 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-28 19:42:07
+ * @LastEditTime: 2020-12-28 21:46:45
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
 
 ```diff
-+ 坚持学习鸭 真是写一次忘一次写一次忘一次，要多做做才行
++ 130 - 150 也太难了（瘫软 😿
 ```
 
 * =========`0 ~ 100`===========
