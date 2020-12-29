@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-28 19:42:14
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-29 21:16:10
+ * @LastEditTime: 2020-12-29 23:02:10
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week15.md
 -->
 # Week 15 - Leetcode 141 - 150 
@@ -341,3 +341,96 @@ public:
     }
 };
 ```
+
+#### 147 - 对链表进行插入排序
+
+模拟题， 找到第一个比当前值大的Node 插他前面
+
+```cpp
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        ListNode* dummy = new ListNode(-1);
+        for(ListNode* p = head; p; )
+        {
+            auto cur = dummy, next = p->next;
+            while(cur->next && cur->next->val <= p->val) cur = cur->next;
+            p->next = cur->next;
+            cur->next = p;
+            p = next;
+        }
+        return dummy->next;
+    }
+};
+```
+
+#### 148 - 排序链表
+
+```diff
+- 很复杂hh
+```
+
+就mergeSort 好了，题目要求的空间复杂度`o(1)` 只能用迭代方式完成，太麻烦就不写了
+
+```cpp
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        if(head == nullptr || head->next == nullptr) return head;
+
+        // 1. 找到中间节点
+        ListNode* fast = head->next; // 这个找中点的额外处理
+        ListNode* slow = head;
+        while(fast && fast->next)
+        {
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        // 2. 两段链表分开
+        ListNode* b = slow->next;
+        slow->next = nullptr;
+
+        // 3. 递归排序
+        ListNode*  left = sortList(head);
+        ListNode* right = sortList(b);
+
+        return mergeList(left, right);
+    }
+
+    ListNode* mergeList(ListNode* left, ListNode* right)
+    {
+        ListNode* dummy = new ListNode(), *cur = dummy;
+        while(left && right)
+        {
+            if(left->val <= right->val)
+            {
+                cur = cur->next = left;
+                left = left->next;
+            }
+            else
+            {
+                cur = cur->next = right;
+                right = right->next;
+            }
+        }
+        while(left)
+        {
+            cur = cur->next = left;
+            left = left->next;
+        }
+        while(right)
+        {
+            cur = cur->next = right;
+            right = right->next;
+        }
+        ListNode* res = dummy->next;
+        delete dummy;
+        return res;
+    }
+};
+```
+
+#### 149 - 直线上最多的点数
+
+枚举中心点 -> 枚举斜率
+
