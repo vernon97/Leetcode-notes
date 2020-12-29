@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-28 19:42:14
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-29 23:02:10
+ * @LastEditTime: 2020-12-29 23:35:02
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week15.md
 -->
 # Week 15 - Leetcode 141 - 150 
@@ -434,3 +434,41 @@ public:
 
 枚举中心点 -> 枚举斜率
 
+这里注意一下 垂直的情况（斜率为负无穷的情况） 和重复点的情况就好了
+
+还有精度问题 -> long double
+
+```cpp
+typedef long double LD;
+class Solution {
+public:
+    int maxPoints(vector<vector<int>>& points) {
+        // 枚举中心点
+        int res = 0;
+        for(vector<int>& point : points)
+        {
+            unordered_map<LD, int> kMap;
+            int vertical = 0, same_center = 0, maxCnt = 0; // 斜率为0 单独处理
+            int x = point[0], y = point[1];
+            for(vector<int>& p : points)
+            {
+                if(p[0] == x && p[1] == y) same_center ++;
+                else if (p[0] == x) vertical++;
+                else
+                {
+                    LD k = static_cast<LD>(p[1] - y) / (p[0] - x);
+                    // cout << x << ' ' << y << ' ' << p[0] << ' ' << p[1] << '-' << k << endl;
+                    kMap[k]++;
+                    maxCnt = max(maxCnt, kMap[k]);
+                }
+            }
+            res = max(res, max(maxCnt, vertical) + same_center);
+        }
+        return res;
+    }
+};
+```
+
+#### 150 - 逆波兰表达式求值
+
+明天再写
