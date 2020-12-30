@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-28 19:42:14
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-29 23:35:02
+ * @LastEditTime: 2020-12-30 21:17:15
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week15.md
 -->
 # Week 15 - Leetcode 141 - 150 
@@ -471,4 +471,35 @@ public:
 
 #### 150 - 逆波兰表达式求值
 
-明天再写
+就按照题里描述的那样 用栈模拟就好了
+
+```cpp
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
+        stack<int> stk;
+        int res = 0;
+        unordered_set<string> ops = {"+", "-", "*", "/"};
+        for(string& s : tokens)
+        {
+            if(!ops.count(s)) stk.push(stoi(s));
+            else
+            {
+                int a = stk.top();
+                stk.pop();
+                int b = stk.top();
+                stk.pop(); 
+                if(s == "*")
+                    stk.push(a * b);
+                else if (s == "/")
+                    stk.push(static_cast<double>(b) / a);
+                else if (s == "+")
+                    stk.push(a + b);
+                else
+                    stk.push(b - a);
+            }
+        }
+        return stk.top();
+    }
+};
+```
