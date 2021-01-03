@@ -5,13 +5,13 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-30 21:17:45
+ * @LastEditTime: 2021-01-03 05:31:37
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
 
 ```diff
-+ 130 - 150 也太难了（瘫软 😿
++ 付费题先跳过 到时候集中做 
 ```
 
 * =========`0 ~ 100`===========
@@ -31,4 +31,5 @@
 * [Week 13 - Leetcode 121 - 130](week13.md) 
 * [Week 14 - Leetcode 131 - 140](week14.md)
 * [Week 15 - Leetcode 141 - 150](week15.md) 
-* [Week 16 - Leetcode 151 - 160](week16.md) ◀️ 
+* [Week 16 - Leetcode 151 - 160](week16.md)
+* [Week 17 - Leetcode 161 - 170](week17.md) ◀️ 
