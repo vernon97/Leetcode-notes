@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-12-30 21:17:53
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-12-30 22:44:19
+ * @LastEditTime: 2021-01-03 04:03:11
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week16.md
 -->
 # Week 16 - 151 - 160
@@ -82,3 +82,110 @@ public:
 
 #### 153 - 寻找旋转排序数组中的最小值
 
+实际上这两个题和前面的 **33, 34** 是一样的，甚至还简化了
+
+```cpp
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        // 和之前的题很像诶 二分找分界线 
+        int k = nums[0];
+        int l = 0, r = nums.size() - 1;
+        while(l < r)
+        {
+            int mid = l + r >> 1;
+            if(nums[mid] < k) r = mid;
+            else l = mid + 1;
+        }
+        return min(nums[0], nums[l]);
+    }
+};
+```
+
+#### 154 - 寻找旋转排序数组中的最小值II
+
+同样的， 也是把后面和`nums[0]`相等的部分提前删去就好了
+
+```cpp
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int l = 0, r = nums.size() - 1;
+        while(l < r && nums[l] == nums[r]) r--;
+        // 二分
+        while(l < r)
+        {
+            int mid = l + r >> 1;
+            if(nums[mid] < nums[0]) r = mid;
+            else l = mid + 1;
+        }
+        return min(nums[0], nums[l]);
+    }
+};
+```
+
+#### 155 - 最小栈
+
+在维护正常的栈的基础上，额外维护一个前缀最小值栈`f`, 来记录stack 前`i`个元素中的最小值就好了
+
+
+```cpp
+class MinStack {
+public:
+    stack<int> stk, f;
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+    }
+    
+    void push(int x) {
+        stk.push(x);
+        if(f.empty() || f.top() > x) f.push(x);
+        else f.push(f.top());
+    }
+    
+    void pop() {
+        stk.pop();
+        f.pop();
+    }
+    
+    int top() {
+        return stk.top();
+    }
+    
+    int getMin() {
+        return f.top();
+    }
+};
+```
+
+**[付费题就先跳过]**
+
+#### 160 - 相交链表
+
+这题的思路还挺巧妙的, 记一下
+
+![avatar](figs/32.jpeg)
+
+```cpp
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if(!headA || !headB) return 0;
+        ListNode* a = headA, *b = headB;
+        while(a != b)
+        {
+            if(a == nullptr)
+                a = headB;
+            else
+                a = a->next;
+            if(b == nullptr)
+                b = headA;
+            else
+                b = b->next;
+        }
+        if(a == nullptr) return 0;
+        else return a;
+    }
+};
+```
