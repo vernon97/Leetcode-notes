@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-03 04:05:28
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-03 07:14:59
+ * @LastEditTime: 2021-01-06 11:22:27
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week17.md
 -->
 # Week 17 - 161 - 170
@@ -178,3 +178,58 @@ public:
 };
 ```
 
+#### 167 - 两数之和II - 输入有序数组
+
+经典的双指针了
+
+```cpp
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        // 经典双指针了
+        int l = 0, r = numbers.size() - 1;
+        while(l < r)
+        {
+            int cur_sum = numbers[l] + numbers[r];
+            if(cur_sum == target) break;
+            else if (cur_sum > target) r--;
+            else l++;
+        }
+        return {l + 1, r + 1};
+    }
+};
+```
+
+#### 168 - Excel表列名称
+
+这个题和二十六进制数转换还是有点区别的， 主要是是1~26的映射，而不是 像正常的k进制数转换一样是在0~25
+
+所以要加一些额外处理， 除26余0 实际上就是这一位可以被26整除 代表的应该是`Z`
+
+以十进制数举例来说， `10` 实际上是两位数字：
+
+- 第一次除10: 等于1 余0
+- 第二次除10: 等于0 余1
+
+这里的逻辑就相当于把10当一整个数字看待，处理这个就是当余数为0的时候单独处理就好；
+
+
+```cpp
+class Solution {
+public:
+    string convertToTitle(int n) {
+        string res;
+        while(n)
+        {
+            if(n % 26)
+                // 这里是转换到了 0 - 25 上 0 实际上表示26 要单独处理
+                res += (n % 26 + 'A' - 1); 
+            else
+                res += 'Z', n--; 
+            n = n / 26;
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+```
