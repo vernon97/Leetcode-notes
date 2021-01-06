@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-06 15:33:10
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-06 18:51:26
+ * @LastEditTime: 2021-01-06 19:25:10
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week18.md
 -->
 
@@ -189,6 +189,15 @@ public:
 
 记住STL重载比较函数的方式 -> 新建一个struct 重载括号
 
+**什么样的比较关系能排序呢？ 全序关系**
+
+全序关系需要满足以下条件：
+
+- 反对称性：若`a ≤ b` 且 `b ≤ a` 则 `a = b`  -> ab = ba
+- 传递性：若`a ≤ b` 且 `b ≤ c` 则 `a ≤ c` -> `ab ≤ ba` `bc ≤ cb` -> `ac ≤ ca`
+  这里 `abc ≤ bac ≤ cab ≤ cba` 所以 `abc ≤ cba` 所以 `ac ≤ ca`
+- 完全性：`a ≤ b` 或者 `b ≤ a` 这个显然
+
 
 ```cpp
 class Solution {
@@ -205,6 +214,34 @@ public:
     string largestNumber(vector<int>& nums) {
         // 正好复习一下STL里面内置容器重新定义排序规则
         sort(nums.begin(), nums.end(), Cmp());
+        stringstream ss;
+        for(int x : nums)
+            ss << x;
+        string res = ss.str();
+        if(res[0] != '0')
+            return res;
+        else
+            return "0";
+    }
+};
+```
+
+除了自定义比较结构体之外，C++ 11 可以传入lambda 函数
+
+
+> [capture list] (params list) mutable exception-> return type { function body }
+
+```cpp
+class Solution {
+public:
+    string largestNumber(vector<int>& nums) {
+        // 正好复习一下STL里面内置容器重新定义排序规则
+        sort(nums.begin(), nums.end(), [](int a, int b) -> bool 
+        {
+            string sa = to_string(a), sb = to_string(b);
+            string sab = sa + sb, sba = sb + sa;
+            return sab > sba;
+        });
         stringstream ss;
         for(int x : nums)
             ss << x;
