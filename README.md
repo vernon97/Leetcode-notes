@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-03 05:31:37
+ * @LastEditTime: 2021-01-06 18:52:09
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
@@ -32,4 +32,6 @@
 * [Week 14 - Leetcode 131 - 140](week14.md)
 * [Week 15 - Leetcode 141 - 150](week15.md) 
 * [Week 16 - Leetcode 151 - 160](week16.md)
-* [Week 17 - Leetcode 161 - 170](week17.md) ◀️ 
+* [Week 17 - Leetcode 161 - 170](week17.md)
+* [Week 18 - Leetcode 171 - 180](week18.md)
+* [Week 19 - Leetcode 181 - 190](week19.md) ◀️ 
