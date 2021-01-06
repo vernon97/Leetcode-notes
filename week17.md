@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-03 04:05:28
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-06 11:22:27
+ * @LastEditTime: 2021-01-06 16:01:25
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week17.md
 -->
 # Week 17 - 161 - 170
@@ -233,3 +233,38 @@ public:
     }
 };
 ```
+
+#### 169 - 多数元素
+
+> 尝试设计时间复杂度为 O(n)、空间复杂度为 O(1) 的算法解决此问题
+
+是很经典的一个题，要好好记下才行
+
+两个变量：
+    - `r` : 表示当前存储的数字
+    - `c` : 当前数的数量
+
+从前到后扫描一次， 如果`x = r` 则统计次数`c++`, 否则`c--`;
+
+**如果c = 0, 那么更新r为当前遍历到的元素**
+
+这样最后剩下的元素一定是出现次数最多的; 思路很难想但是记下了就好了（x
+
+代码很简单
+
+```cpp
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int r = 0, c = 0;
+        for(int x : nums)
+        {
+            if(c == 0) r = x;
+            if(x == r) c++;
+            else c--;
+        }
+        return r;
+    }
+};
+```
+
