@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-07 17:11:38
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-07 20:19:40
+ * @LastEditTime: 2021-01-07 21:36:29
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week21.md
 -->
 
@@ -120,4 +120,83 @@ public:
 
 #### 204 - 计数质数
 
-素数筛马上拿出来背一遍
+```diff
++ 数论
+```
+
+线性筛马上拿出来背一遍， 数论确实很难见到 原谅自己忘了hh
+
+> 质数定理: 在x -> +inf 时候， 0 ~ x 质数的个数 ~ x/ln(x)
+
+提到算质数肯定就是线性筛了，线性筛保证每个数字只会被筛一次 所以时间复杂度是`o(n)`的；
+
+**线性筛保证每个合数都只被他的最小质因子筛掉一次** -> 是往后筛
+
+（这里是包括n的）
+
+```cpp
+class Solution {
+public:
+    int countPrimes(int n) {
+        if(n <= 2) return 0;
+        vector<int> primes;
+        vector<bool> st(n);
+        for(int i = 2; i <= n; i++)
+        {
+            // 1. 没被筛掉 -> 则证明是质数
+            if(!st[i]) primes.push_back(i);
+            // 2. 往后筛 记住那个前提！ 线性筛保证每个合数都只会被其最小质因子筛掉一次
+            for(int j = 0; primes[j] <= n / i; j++)
+            {
+                st[primes[j] * i] = true;
+                if(i % primes[j] == 0) break;
+            }
+        }
+        return primes.size();
+    }
+};
+```
+
+所以 在`i % primes[j] != 0` 的情况下 primes[j] 一定是最小质因子;
+跳出条件就是`i % primes[j] == 0`;
+
+记住就好了；
+
+#### 205 - 同构字符串
+
+模拟题：
+
+有这两个条件:
+> 每个出现的字符都应当映射到另一个字符，同时不改变字符的顺序。
+> 不同字符不能映射到同一个字符上，相同字符只能映射到同一个字符上，字符可以映射到自己本身。
+
+第一个条件用一个哈希表来存储`s->t`映射关系，第二个条件用一个set来存是否`t`的字符是否有被映射过
+
+```cpp
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        // 模拟题
+        unordered_map<char, char> hash;
+        unordered_set<char> seen;
+        // if(s.size() != t.size()) return false; -> 题中假设长度相同
+        for(int i = 0; i < t.size(); i++)
+        {
+            if(!hash.count(s[i]))
+            {
+                if(!seen.count(t[i]))
+                {
+                    hash[s[i]] = t[i];
+                    seen.insert(t[i]);
+                }
+                else
+                    return false;
+                
+            }
+            else if(hash[s[i]] != t[i])
+                return false;
+        }
+        return true;
+    }
+};
+```
