@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-06 18:49:04
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-06 20:48:33
+ * @LastEditTime: 2021-01-07 15:58:57
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week19.md
 -->
 
@@ -44,7 +44,8 @@ for(int i = 1, j = 0; i <= n; i++)
 }
 ```
 
-这题应该就是字符串哈希了, 这里除了常规的字符串哈希逻辑之外
+这题应该就是字符串哈希了, 这里除了常规的字符串哈希逻辑之外,
+找到出现过的就清空 这里就直接改count就好了
 
 ```cpp
 typedef unsigned long long ULL;
@@ -89,5 +90,107 @@ public:
     }
 };
 ```
+
+#### 188 - 买卖股票的最佳时期IV
+
+是的 这题就是状态机模型 股票终极版
+
+首先，提前判断-> 如果k足够大, 就相当于 可以无限买卖 这样的话实际就是之前做过的122题 当时那个把整段交易拆分成每天交易一次的思想
+
+除了这个之外, **状态机模型**:
+
+![avatar](figs/36.jpeg)
+
+```cpp
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        int res = 0, n = prices.size();
+        if(k >= n / 2 + 1)
+        {
+            for(int i = 0; i + 1 < prices.size(); i++)
+                res += max(0, prices[i + 1] - prices[i]);
+            return res;
+        }
+        else
+        {
+            // * 这里f表示的是手里无股票 g表示的是手里有股票
+            vector<vector<int>> f(n + 1, vector<int>(k + 1, -2e9)), g(n + 1, vector<int>(k + 1, -2e9));
+            f[0][0] = 0;
+            for(int i = 1; i <= n; i++)
+                for(int j = 0; j <= k; j++)
+                {
+                    f[i][j] = max(f[i - 1][j], g[i - 1][j] + prices[i - 1]);
+                    res = max(res, f[i][j]);
+                    if(j) g[i][j] = max(g[i - 1][j], f[i - 1][j - 1] - prices[i - 1]);
+                    else g[i][j] = g[i - 1][j];
+                }
+            return res;
+        }
+        
+    }
+};
+```
+
+#### 189 - 旋转数组
+
+> 要求使用空间复杂度为 O(1) 的 原地 算法
+
+1. 将整个数组翻转一遍
+
+`[1,2,3,4,5,6,7] -> [7,6,5,4,3,2,1]`
+
+2. 将前k个数翻转 后k个数翻转
+
+`-> [5,6,7, | 1,2,3,4]`
+
+翻转可以采用双指针算法，空间复杂度是`o(1)`的
+
+```cpp
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        k = k % nums.size();
+        reverseVec(nums, 0, nums.size() - 1);
+        // 翻转前半部分
+        reverseVec(nums, 0, k - 1);
+        // 翻转后半部分
+        reverseVec(nums, k, nums.size() - 1);
+    }
+    void reverseVec(vector<int>& nums, int l, int r)
+    {
+        while(l < r)
+        {
+            swap(nums[l], nums[r]);
+            l++, r--;
+        }
+    }
+};
+```
+
+#### 190 - 颠倒二进制位
+
+从右到左扣出每一位 反过来补给res上
+
+```cpp
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t res = 0, cnt = 31;
+        while(n)
+        {
+            if(n & 1)
+                res += 1 << cnt;
+            n >>= 1;
+            cnt--;
+        }
+        return res;
+    }
+};
+```
+
+
+
+
 
 
