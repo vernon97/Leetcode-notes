@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-07 17:11:38
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-07 21:36:29
+ * @LastEditTime: 2021-01-08 17:14:43
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week21.md
 -->
 
@@ -197,6 +197,96 @@ public:
                 return false;
         }
         return true;
+    }
+};
+```
+
+#### 206 - 反转链表
+
+感觉做过.jpg
+
+![avatar](figs/38.jpeg)
+
+1. 迭代
+   
+```cpp
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(!head || !head->next) return head;
+        ListNode* a = head, *b = head->next;
+        while(b)
+        {
+            ListNode* bnext = b->next;
+            b->next = a;
+            a = b;
+            b = bnext;
+        }
+        head->next = nullptr;
+        return a;
+    }
+};
+```
+
+2. 递归
+
+```cpp
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(!head || !head->next) return head;
+        ListNode* tail = reverseList(head->next);
+        head->next->next = head;
+        head->next = nullptr;
+        return tail;
+    }
+};
+```
+
+#### 207 - 课程表
+
+Leetcode的图论题真的很少.. 看到了图论题就来复习一下8
+
+[图论复习](图论.md)
+
+回过来，这里显然就是拓扑排序了
+
+```cpp
+class Solution {
+public:
+    static const int N = 100010;
+    vector<int> h, e, ne, din;
+    int n, idx = 0;
+public:
+    void add(int a, int b)
+    {
+        e[idx] = b, ne[idx] = h[a], h[a] = idx++, din[b]++;
+    }
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        n = numCourses;
+        h = vector<int>(n, -1), e = vector<int>(n * n), ne = vector<int>(n * n), din = vector<int>(n, 0);
+
+        for(auto& edge : prerequisites)
+            add(edge[0], edge[1]);
+        int cnt = 0;
+        // 初始化
+        queue<int> q;
+        for(int i = 0; i < n; i++)
+            if(!din[i]) q.push(i), cnt++;
+        
+        while(q.size())
+        {
+            int t = q.front();
+            q.pop();
+            for(int i = h[t]; ~i; i = ne[i])
+            {
+                int j = e[i];
+                din[j]--;
+                if(din[j] == 0) 
+                    q.push(j), cnt++;
+            }
+        }
+        return cnt == n;
     }
 };
 ```
