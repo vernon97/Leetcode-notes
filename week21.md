@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-07 17:11:38
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-08 17:14:43
+ * @LastEditTime: 2021-01-09 01:05:23
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week21.md
 -->
 
@@ -287,6 +287,181 @@ public:
             }
         }
         return cnt == n;
+    }
+};
+```
+
+#### 208 - 实现Trie（前缀树）
+
+Trie树 这个数据结构也比较简单 就是按照单词的顺序把每个字母建一条边;
+常用于存储大量单词这样的情况; 如果前缀相同则共享边， 以此节省存储空间
+
+树的每个节点属性： 26个儿子 + 是否为单词结尾的bool标记
+
+`search` 和 `startWith` 的区别就在于最后是否要判断单次结尾标记
+
+```cpp
+class Trie {
+public:
+    /** Initialize your data structure here. */
+
+    struct Node
+    {
+        Node* son[26];
+        bool is_end;
+        Node()
+        {
+            is_end = false;
+            for(int i = 0; i < 26; i++)
+                son[i] = nullptr;
+        }
+    }*root;
+    Trie() {
+        root = new Node();
+    }
+    
+    /** Inserts a word into the trie. */
+    void insert(string word) {
+        auto p = root;
+        for(auto c : word)
+        {
+            int u = c - 'a';
+            if(p->son[u] == nullptr) p->son[u] = new Node();
+            p = p->son[u];
+        }
+        p->is_end = true;
+    }
+    
+    /** Returns if the word is in the trie. */
+    bool search(string word) {
+        auto p = root;
+        for(auto c : word)
+        {
+            int u = c - 'a';
+            if(p->son[u] == nullptr) return false;
+            p = p->son[u];
+        }
+        return p->is_end;
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    bool startsWith(string prefix) {
+        auto p = root;
+        for(auto c : prefix)
+        {
+            int u = c - 'a';
+            if(p->son[u] == nullptr) return false;
+            p = p->son[u];
+        }
+        return true;
+    }
+};
+```
+
+#### 209 - 长度最小的子数组
+
+提到滑动窗口 很快啊 我就把这个题翻出来看一遍, 滑动窗口分两种固定窗口大小的和不固定的 不固定的就不太好写看看这个复习一下
+
+**Leetcode 76. 最小覆盖子串**
+
+```cpp
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int res = 1e6, suc = 0, cnt = 0, ri = 0;
+        unordered_map<char, int> hash, window;
+        for(auto c : t)
+            hash[c]++, cnt++;
+        for(int l = 0, r = 0; r < s.size(); r++)
+        {
+            // 加入滑动窗口
+            window[s[r]]++;
+            if(window[s[r]] <= hash[s[r]]) suc++;
+            // 从滑动窗口中弹出 注意这个条件
+            while(window[s[l]] > hash[s[l]]) window[s[l++]]--;
+            if(suc == cnt)
+            {
+                if(res > r - l + 1)
+                {
+                    res = r - l + 1;
+                    ri = l;
+                }
+            }
+        }
+        if(res == 1e6) return "";
+        return s.substr(ri, res);
+    }
+};
+```
+
+所以这题的整体逻辑是一样的, 由于列表只会遍历一次所以是`o(n)`的;
+
+```cpp
+class Solution {
+public:
+    int minSubArrayLen(int s, vector<int>& nums) {
+        // 时间复杂度要求为o(n)
+        // 一看就是双指针
+        int res = 2e9, sum = 0;
+        for(int l = 0, r = 0; r < nums.size(); r++)
+        {
+            // 加入滑动窗口
+            sum += nums[r];
+            // 弹出滑动窗口
+            while(sum >= s)
+            {
+                res = min(r - l + 1, res);
+                sum -= nums[l++];
+            }
+        }
+        if(res == 2e9) return 0;
+        else return res;
+    }
+};
+```
+
+#### 210 - 课程表II
+
+拓扑排序的出栈顺序就是拓扑排序的结果，保存出栈顺序当然是数组模拟链表啦hh;
+
+```cpp
+class Solution {
+public:
+    int n;
+    vector<int> h, e, ne, din;
+    int idx = 0;
+public:
+    void add(int a, int b)
+    {
+        e[idx] = b, ne[idx] = h[a], h[a] = idx++, din[b]++;
+    }
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        n   = numCourses;
+        h   = vector<int>(n, -1);
+        e   = vector<int>(n * n);
+        ne  = vector<int>(n * n);
+        din = vector<int>(n);
+
+        for(vector<int>& edge : prerequisites)
+            add(edge[1], edge[0]);
+        
+        vector<int> q(n);
+        int hh = 0, tt = -1;
+        for(int i = 0; i < n; i++)
+            if(!din[i]) q[++tt] = i;
+        
+        while(hh <= tt)
+        {
+            int t = q[hh++];
+            for(int i = h[t]; ~i; i = ne[i])
+            {
+                int j = e[i];
+                din[j]--;
+                if(din[j] == 0) q[++tt] = j;
+            }
+        }
+        if(tt == n - 1) return q;
+        else return {};
     }
 };
 ```
