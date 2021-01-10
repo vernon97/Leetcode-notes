@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-09 01:22:48
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-09 23:13:04
+ * @LastEditTime: 2021-01-10 22:34:23
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week22.md
 -->
 # Week 22 - Leetcode 211 - 220
@@ -282,7 +282,6 @@ public:
 这题一看就是KMP了， 很快啊就背一遍KMP
 
 ```cpp
-
 vector<int> ne(n + 2);
 
 for(int i = 2, j = 0; i <= m; i++)
@@ -303,3 +302,34 @@ for(int i = 1, j = 0; i <= n; i++)
     }
 }
 ```
+
+对于这个题而言 就是找到原字符串`s`的**最长回文前缀**
+
+最长回文前缀常和KMP联系到一起，具体操作如下：
+
+![avatar](figs/42.jpeg)
+
+```cpp
+class Solution {
+public:
+    string shortestPalindrome(string s) {
+        // 1. 复制翻转串
+        string rev_s(s.rbegin(), s.rend());
+        string pattern = ' ' + s + '#' + rev_s;
+        int n = pattern.size() - 1;
+        vector<int> ne(n + 2);
+        // 2. 求ne数组 找到最长回文前缀
+        for(int i = 2, j = 0; i <= n; i++)
+        {
+            while(j && pattern[i] != pattern[j + 1]) j = ne[j];
+            if(pattern[i] == pattern[j + 1]) j++;
+            ne[i] = j;
+        }
+        return rev_s + s.substr(ne[n]);
+    }
+};
+```
+
+#### 215 - 数组中的第K个最大元素
+
+快排 or 二分都可以解决这个问题
