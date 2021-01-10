@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-09 01:22:48
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-10 22:34:23
+ * @LastEditTime: 2021-01-10 23:52:35
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week22.md
 -->
 # Week 22 - Leetcode 211 - 220
@@ -333,3 +333,140 @@ public:
 #### 215 - 数组中的第K个最大元素
 
 快排 or 二分都可以解决这个问题
+
+很快啊 就复习一下快排
+
+```cpp
+void quick_sort(vector<int>& q, int l, int r)
+{
+    if(l >= r) return;
+    int i = l - 1, j = r + 1, x = q[l + r >> 1];
+    while(i < j)
+    {
+        do i++; while(q[i] < x);
+        do j--; while(q[j] > x);
+        if(i < j) swap(q[i], q[j]);
+    }
+    quick_sort(q, l, j);
+    quick_sort(q, j + 1, r);
+}
+```
+
+为什么快排可以解决这种选择第k个数的问题呢，是因为快排每次可以确定一个数在已经排序数组中的位置（也就是上面代码中的x （也叫做pivot）
+
+如此，我们如果只需要得到第K个数的话 最后了两边分别递归排序可以只递归K所在的那边；
+
+```cpp
+int quick_select(vector<int>& q, int l, int r, int k)
+{
+    if(l >= r) return q[l];
+    int i = l - 1, j = r + 1, x = q[l + r >> 1];
+
+    while(i < j)
+    {
+        do i++; while(q[i] < x);
+        do j--; while(q[j] > x);
+        if(i < j) swap(q[i], q[j]);
+    }
+    int sl = j - l + 1;
+    if(k <= sl) return quick_select(q, l, j, k);
+    else return quick_select(q, j + 1, r, k - sl);
+}
+```
+
+对于本题的代码如下：
+
+```cpp
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        return quick_select(nums, 0, nums.size() - 1, nums.size() - k + 1);
+    }
+    int quick_select(vector<int>& nums, int l, int r, int k)
+    {
+        if(l >= r) return nums[l];
+        int i = l - 1, j = r + 1, x = nums[l + r >> 1];
+        while(i < j)
+        {
+            do i++; while(nums[i] < x);
+            do j--; while(nums[j] > x);
+            if(i < j) swap(nums[i], nums[j]);
+        }
+        int sl = j - l + 1;
+        if(k <= sl) return quick_select(nums, l, j, k);
+        else return quick_select(nums, j + 1, r, k - sl);
+    }
+};
+```
+
+#### 216 - 组合总和
+
+显然是DFS了, 提到DFS就来和我背一下DFS的剪枝策略:
+
+```diff
++ 优化搜索顺序： 大部分情况下应该优先搜索分支较少的节点
++ 排除等效冗余： 如果不考虑顺序，要按照组合数搜索；
++ 可行性剪枝： 不可行提前返回
++ 最优性剪枝：如果不能当前最优更好的话可以直接返回；
+```
+
+这题优化搜索顺序肯定是**从9开始搜索**了 (优化搜索顺序)
+按照组合数搜索, dfs传参额外记录一个起点（排除等效冗余）
+
+```cpp
+class Solution {
+public:
+    int nums[9] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+    vector<vector<int>> res;
+public:
+    vector<vector<int>> combinationSum3(int k, int sum) {
+        // 最大值是 (n + n - k + 1) * k / 2
+        if(sum <= 1 || sum > (2 * 9 - k + 1) * k / 2) return res;
+        vector<int> p;
+        dfs(-1, k, sum, p);
+        return res;
+    }
+    void dfs(int u, int k, int sum, vector<int>& path)
+    {
+        if(k == 0)
+        {
+            if(sum == 0)
+                res.push_back(path);
+            return;
+        }
+        for(int i = u + 1; i < 9; i++)
+        {
+            if(sum >= nums[i])
+            {
+                path.push_back(nums[i]);
+                dfs(i, k - 1, sum - nums[i], path);
+                path.pop_back();
+            }
+        }
+    }
+};
+```
+
+#### 217 - 存在重复元素
+
+这题有啥意义。。
+
+```cpp
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        unordered_map<int, int> hash;
+        for(int x : nums)
+        {
+            if(hash[x] > 0) return true;
+            hash[x]++;
+        }
+        return false;
+    }
+};
+```
+
+#### 218 - 天际线问题
+
+
+
