@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-09 01:22:48
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-10 23:52:35
+ * @LastEditTime: 2021-01-11 15:46:06
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week22.md
 -->
 # Week 22 - Leetcode 211 - 220
@@ -468,5 +468,103 @@ public:
 
 #### 218 - 天际线问题
 
+其实是一类问题: **扫描线问题** (别骂了图形学真的不会)
+
+我们记录每个大楼的左端点和右端点以及对应的高度，然后使用一条扫描线从左向右扫描，每次遇到一个大楼的左端点或者右端点，就有可能是关键点。很直观我们可以得到以下的判别方式。
+> **关键点是水平线段的左端点**
+如果当前扫描到的点是左端点：如果当前左端点p是当前位置上最高的点，那么这一个点是一个关键点`(p.left,p.height)`。
+
+如果当前扫描到的点是右端点：如果当前右端点p比除了这个右端点之外最高的点q还要高，那么我们形成了一个关键点，这个关键点的坐标就是`(p.right,q.height)`。
+
+接下来我们就需要考虑如何能够高效的实现支持单点更新的区间最大值（楼的高度），线段树是可以的，但是这道题也没有区间查询，那么我们直接使用一个`multiset`就可以了，这里使用`multiset`而不是`set`是因为多个建筑物可以共享同一个高度。如果遇到左端点，我们就把这个楼的高度加入`multiset`；如果遇到右端点，我们就把这个楼的高度从`multiset`中移除。
+
+> TODO:  **马上去背线段树**
+
+但是这个题的边界问题很多，主要是**同一根扫描线出现不同点的遍历顺序问题**, 分段讨论吧（很坑）
+
+![avatar](figs/43.png)
+
+**总结遍历规则：**
+
+- 同一横坐标 两个左端点 先遍历高的
+- 同一横坐标 两个右端点 先遍历矮的
+- 同一横坐标 一左一右 先遍历左边
+
+所以这里用`pair<int, int>`存储左右端点 存储规则为`<l, -h>` 和 `<r, h>`便可以在排序后支持以上的遍历规则;
+
+其实一般的情况下扫描线算法可以用来算面积/周长 边界没有本题这么exin..
+
+```cpp
+using PII = pair<int, int>; 
+class Solution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+        vector<vector<int>> res;
+        vector<PII> points;
+        multiset<int> heights;
+        // 1. 保存左右端点
+        for(vector<int>& b : buildings)
+        {
+            points.emplace_back(b[0], -b[2]);
+            points.emplace_back(b[1], b[2]);
+        }
+        // 2. 按横坐标排序
+        sort(points.begin(), points.end());
+        heights.insert(0);
+        // 3. 遍历
+        for(PII& p : points)
+        {
+            int x = p.first, h = abs(p.second);
+            // 如果x为左端点
+            if(p.second < 0)
+            {
+                if(h > *heights.rbegin())
+                    res.push_back({x, h});
+                heights.insert(h);
+            }
+            else
+            {
+                // ! 注意这里的删除规则！ 如果erase 传入的是值的话 会删除所有相等的元素 而这里我们只能删除一个 所以要传入find 返回迭代器
+                heights.erase(heights.find(h));
+                if(h > *heights.rbegin())
+                    res.push_back({x, *heights.rbegin()});
+            }
+        }
+        return res;
+    }   
+};
+```
+
+太难了 欣赏一下吧, 不过扫描线算法是值得学习的
+
+
+#### 219 - 存在重复元素II
+
+和上一题比起来 这里的hash 统计的就不是出现次数了 而是上一次出现的位置
+
+```cpp
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        unordered_map<int, int> hash;
+        for(int i = 0; i < nums.size(); i++)
+        {
+            // 这里的hash 统计的就不是出现次数了 而是上一次出现的位置
+            int x = nums[i];
+            if(!hash.count(x))
+                hash[x] = i;
+            else
+            {
+                if(i - hash[x] <= k)
+                    return true;
+                hash[x] = i;
+            }
+        }
+        return false;
+    }
+};
+```
+
+#### 220 - 存在重复元素III
 
 
