@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-09 01:22:48
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-11 15:46:06
+ * @LastEditTime: 2021-01-11 16:22:56
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week22.md
 -->
 # Week 22 - Leetcode 211 - 220
@@ -567,4 +567,38 @@ public:
 
 #### 220 - 存在重复元素III
 
+来复习一下`lower_bound`和`upper_bound`操作
+
+**lower_bound** 找到第一个 `>= x` 的元素 返回迭代器
+**upper_bound** 找到第一个 `>  x` 的元素 返回迭代器
+
+所以要想找到 `<x`且 距离x最接近的元素 就是lower_bound() 返回迭代器 前面的那个元素
+
+对于本题, 我们维护一个长度为k的滑动窗口 找到窗口内离 ai最近的元素 计算绝对值；
+
+> 当然了 滑动窗口的最大值最小值是单调队列
+
+本题因为有一组INT_MAX 和 INT_MIN 的测试样例 所以要用long long;
+
+```cpp
+using LL = long long;
+class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
+        multiset<LL> S;
+        S.insert(1E18);
+        S.insert(-1E18);
+
+        for(int i = 0, j = 0; i < nums.size(); i++)
+        {
+            if(i - j > k) S.erase(S.find(nums[j++]));
+            auto it = S.lower_bound(nums[i]);
+            LL greater_x = *it, lower_x = *(--it);
+            if(min(greater_x - nums[i], nums[i] - lower_x) <= t) return true;
+            S.insert(nums[i]);
+        }
+        return false;
+    }
+};
+```
 
