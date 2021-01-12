@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-11 16:23:08
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-12 20:27:58
+ * @LastEditTime: 2021-01-12 21:24:43
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week23.md
 -->
 <!--
@@ -18,7 +18,6 @@
  * @LastEditTime: 2021-01-11 22:25:24
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week23.md
 -->
-
 - [Week 23 - Leetcode 221 - 230](#week-23---leetcode-221---230)
       - [221 - 最大正方形](#221---最大正方形)
       - [222 - 完全二叉树的节点个数](#222---完全二叉树的节点个数)
@@ -29,6 +28,7 @@
       - [227 - 基本计算器II](#227---基本计算器ii)
       - [228 - 汇总区间](#228---汇总区间)
       - [229 - 求众数II](#229---求众数ii)
+      - [230 - 二叉搜索树中第K小的元素](#230---二叉搜索树中第k小的元素)
 
 # Week 23 - Leetcode 221 - 230
 
@@ -525,13 +525,49 @@ public:
 
 #### 229 - 求众数II
 
-先来复习一下求众数I
+先来复习一下 (Leetcode 169. 多数元素)
 
 ```cpp
 遍历nums, x = nums[0], cnt = 1;
-if(nums[i] == x) cnt++;
-else cnt--;
-if(cnt == 0) x = nums[i]
+for(int i = 1; i < nums.size(); i++)
+{
+    if(nums[i] == x) cnt++;
+    else cnt--;
+    if(cnt == 0) x = nums[i];
+}
 ```
 
+> **摩尔投票算法**
+
+![avatar](figs/46.jpeg)
+
+```cpp
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        int r1 = 0, cnt1 = 0, r2 = 0, cnt2 = 0, n = nums.size();
+        vector<int> res;
+        for(int x : nums)
+        {
+            if(cnt1 && x == r1) cnt1++;
+            else if(cnt2 && x == r2) cnt2++;
+            else if(!cnt1) r1 = x, cnt1++;
+            else if(!cnt2) r2 = x, cnt2++;
+            else cnt1--, cnt2--;
+        }
+        // 得到备选
+        cnt1 = cnt2 = 0;
+        for(int x : nums)
+        {
+            if(x == r1) cnt1++;
+            else if(x == r2) cnt2++;
+        }
+        if(cnt1 > n / 3) res.push_back(r1);
+        if(cnt2 > n / 3) res.push_back(r2);
+        return res;
+    }
+};
+```
+
+#### 230 - 二叉搜索树中第K小的元素
 
