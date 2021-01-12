@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-11 16:23:08
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-12 19:45:31
+ * @LastEditTime: 2021-01-12 20:27:58
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week23.md
 -->
 <!--
@@ -25,6 +25,10 @@
       - [223 - 矩形面积](#223---矩形面积)
       - [224 - 基本计算器](#224---基本计算器)
       - [225 - 用队列实现栈](#225---用队列实现栈)
+      - [226 - 翻转二叉树](#226---翻转二叉树)
+      - [227 - 基本计算器II](#227---基本计算器ii)
+      - [228 - 汇总区间](#228---汇总区间)
+      - [229 - 求众数II](#229---求众数ii)
 
 # Week 23 - Leetcode 221 - 230
 
@@ -326,5 +330,208 @@ public:
 ```
 
 #### 225 - 用队列实现栈
+
+好没劲这题, 用队列实现栈的意思就是每次取一个元素就要倒腾一圈
+
+```cpp
+class MyStack {
+public:
+    queue<int> q;
+public:
+    /** Initialize your data structure here. */
+    MyStack() = default;
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        q.push(x);
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        int k = q.size();
+        while(--k)
+        {
+            int t = q.front();
+            q.pop();
+            q.push(t);
+        }
+        int res = q.front();
+        q.pop();
+        return res;
+    }
+    /** Get the top element. */
+    int top() {
+        int k = q.size();
+        while(--k)
+        {
+            int t = q.front();
+            q.pop();
+            q.push(t);
+        }
+        int res = q.front();
+        q.pop();
+        q.push(res);
+        return res;
+
+    }
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return q.empty();
+    }
+};
+```
+
+#### 226 - 翻转二叉树
+
+先翻转左右儿子 再递归操作就好了
+
+(为什么题目描述还要鞭尸Homebrew的作者)
+
+```cpp
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(!root || (!root->left && !root->right)) return root;
+        // 递归构建
+        TreeNode* tmp = root->right;
+        root->right = root->left;
+        root->left = tmp;
+        invertTree(root->left);
+        invertTree(root->right);
+        return root;
+    }
+};
+```
+
+#### 227 - 基本计算器II
+
+和上一题一样，加上了运算符优先级判断；
+
+```cpp
+class Solution {
+public:
+    stack<int> nums;
+    stack<char> ops;
+    unordered_map<char, int> priority;
+public:
+    void calc(char op)
+    {
+        // 记住是先取y 再取x
+        int y = nums.top(); nums.pop();
+        int x = 0; 
+        if (nums.size()) {
+            x = nums.top();
+            nums.pop();
+        }
+        int z = 0;
+        switch(op)
+        {
+            case '+':
+                z = x + y;
+                break;
+            case '-':
+                z = x - y;
+                break;
+            case '*':
+                z = x * y;
+                break;
+            case '/':
+                z = x / y;
+                break;
+        }
+        nums.push(z);
+    }
+    int calculate(string s) {
+        priority['+'] = priority['-'] = 2;
+        priority['*'] = priority['/'] = 3;
+        priority['('] = 1; // '(' 身份最低 到他一定要结束
+        for(int i = 0; i < s.size(); i++)
+        {
+            // * case 1 : 空格
+            if(s[i] == ' ') continue;
+            // * case 2 : 多位数字
+            if(isdigit(s[i]))
+            {
+                int x = 0, j = i;
+                while(j < s.size() && isdigit(s[j])) x = x * 10 + (s[j++] - '0');
+                i = j - 1;
+                nums.push(x);
+            }
+            // * case 3 : 左括号
+            else if (s[i] == '(')  ops.push('(');
+            // * case 4 : 右括号
+            else if (s[i] == ')')
+            {
+                while(ops.size() && ops.top() != '(')
+                {
+                    char op = ops.top();
+                    ops.pop();
+                    calc(op);
+                }
+                ops.pop();
+            }
+            // * case 5 : 运算符
+            // ! 注意和上一题的区别就在这里
+            else
+            {
+                // ! 如果当前栈顶运算符优先级大于等于s[i]
+                while(ops.size() && priority[ops.top()] >= priority[s[i]])
+                {
+                    char op = ops.top();
+                    ops.pop();
+                    calc(op);
+                }
+                ops.push(s[i]);
+            }
+        }
+        // 最后的处理
+        while(ops.size())
+        {
+            char op = ops.top();
+            ops.pop();
+            calc(op);
+        }
+        return nums.top();
+    }
+};
+```
+
+#### 228 - 汇总区间
+
+感觉就是题意的简单模拟
+
+```cpp
+class Solution {
+public:
+    vector<string> summaryRanges(vector<int>& nums) {
+        // 模拟题
+        vector<string> res;
+        for(int i = 0; i < nums.size(); i++)
+        {
+            if(i + 1 < nums.size() && nums[i] + 1 == nums[i + 1])
+            {
+                int j = i;
+                while(j + 1 < nums.size() && nums[j] + 1 == nums[j + 1]) j++;
+                res.push_back(to_string(nums[i]) + "->" + to_string(nums[j]));
+                i = j;
+            }
+            else
+                res.push_back(to_string(nums[i]));
+        }
+        return res;
+    }
+};
+```
+
+#### 229 - 求众数II
+
+先来复习一下求众数I
+
+```cpp
+遍历nums, x = nums[0], cnt = 1;
+if(nums[i] == x) cnt++;
+else cnt--;
+if(cnt == 0) x = nums[i]
+```
 
 
