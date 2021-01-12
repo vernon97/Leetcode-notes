@@ -5,14 +5,15 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-12 22:13:22
+ * @LastEditTime: 2021-01-12 22:40:55
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
 
 ```diff
-+ 付费题先跳过 到时候集中做 
++ Leetcode 前300 + 剑指offer 做完就跑✅
 ```
+
 * ========`相关知识总结`=========
 * [常用数据结构](常用数据结构.md)
 * [图论相关](图论.md)
