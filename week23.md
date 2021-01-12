@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-11 16:23:08
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-12 21:24:43
+ * @LastEditTime: 2021-01-12 22:11:59
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week23.md
 -->
 <!--
@@ -238,7 +238,7 @@ int main() {
         }
     }
     // 剩下符号再计算一下
-    while (ops.size() && nums.size() >= 2) {
+    while (ops.size()) {
         char op = ops.back();
         ops.pop_back();
         calc(op);
@@ -569,5 +569,108 @@ public:
 };
 ```
 
+这里我们简单证明一下为什么摩尔投票法是正确的；
+
+证明的点在于：**出现次数大于`n / k`的数`r`一定会被选出来**
+
+> **如果想抵消一个`r`的话 至多抵消`k - 1`个其他元素;**
+
+所以, 出现次数大于`n / k`的数`r` 肯定会被剩下, 这便是摩尔投票法正确性的证明✅
+
 #### 230 - 二叉搜索树中第K小的元素
 
+说到BST中第K小的元素，马上就回顾一下Leetcode.215 数组中的第K个最大元素
+
+215是快速选择算法了
+
+```cpp
+int quick_select(int l, int r, int k)
+{
+    if(l >= r) return nums[r];
+    int i = l - 1, j = r + 1, x = nums[l + r >> 1];
+    while(l < r)
+    {
+        do i++; while(nums[i] < x);
+        do j--; while(nums[j] > x);
+        if(i < j) swap(nums[i], nums[j]);
+    }
+    int sl = j - l + 1;
+    if(sl < k) return quick_select(l, j, k);
+    else return quick_select(j + 1, r, k - sl);
+}
+```
+
+而这个题, **二叉搜索树的中序遍历是有序数组** 就跑一遍中序遍历 遍历到第K个数返回就可以了;
+
+很快啊 就复习一下 迭代法的中序遍历(左根右);
+
+前序遍历是加入时处理，中序遍历是弹出时处理
+
+**前序遍历**
+
+```cpp
+void firstOrderTraverse(TreeNode* root)
+{
+    stack<TreeNode*> stk;
+    vector<int> res;
+    while(root || stk.size())
+    {
+        while(root)
+        {
+            res.push_back(root->val);
+            stk.push(root);
+            root = root->left;
+        }
+        root = stk.top()->right;
+        stk.pop();
+    }    
+}
+```
+
+**中序遍历**
+
+```cpp
+void inOrderTraverse(TreeNode* root)
+{
+    stack<TreeNode*> stk;
+    vector<int> res;
+    while(root || stk.size())
+    {
+        while(root)
+        {
+            stk.push(root);
+            root = root->left;
+        }
+        root = stk.top();
+        res.push_back(root->val);
+        stk.pop();
+        root = root->right;
+    }
+}
+```
+
+↓本题代码
+
+```cpp
+class Solution {
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        stack<TreeNode*> stk;
+        int cnt = 0;
+        while(root || stk.size())
+        {
+            while(root)
+            {
+                stk.push(root);
+                root = root->left;
+            }
+            root = stk.top();
+            cnt++;
+            if(cnt == k) return root->val;
+            stk.pop();
+            root = root->right;
+        }
+        return 0;
+    }
+};
+```

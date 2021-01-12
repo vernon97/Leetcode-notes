@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-11 19:25:23
+ * @LastEditTime: 2021-01-12 22:13:22
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
@@ -14,7 +14,9 @@
 + 付费题先跳过 到时候集中做 
 ```
 * ========`相关知识总结`=========
+* [常用数据结构](常用数据结构.md)
 * [图论相关](图论.md)
+* [动态规划](动态规划.md)
 * =========`0 ~ 100`===========
 * [Week 01 - Leetcode 01 - 10](week01.md)
 * [Week 02 - Leetcode 11 - 20](week02.md)
@@ -41,3 +43,4 @@
 * [Week 21 - Leetcode 201 - 210](week21.md)
 * [Week 22 - Leetcode 211 - 220](week22.md)
 * [Week 23 - Leetcode 221 - 230](week23.md)
+* [Week 24 - Leetcode 231 - 240](week24.md)
