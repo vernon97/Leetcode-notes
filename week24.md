@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-12 22:12:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-13 19:50:14
+ * @LastEditTime: 2021-01-13 20:09:40
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week24.md
 -->
 
@@ -168,3 +168,32 @@ public:
 ```
 
 #### 235 - 二叉搜索树的最近公共祖先
+
+肯定是递归搜索了 和root比 一大一小就是当前的root为答案, 不然就往两边走
+相等直接返回即可（根据定义）
+
+那个bool判断异或 `if((rootval < pval) ^ (rootval < qval))` 是两个之中保证一个成立的意思 简化if的判断条件
+
+```cpp
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // 肯定是递归搜索了 和root比 一大一小就是当前的root为答案
+        // 最近公共祖先节点可以为节点本身。
+        int pval = p->val, qval = q->val;
+        while(root)
+        {
+            int rootval = root->val;
+            if(rootval == pval || rootval == qval) return root;
+            if((rootval < pval) ^ (rootval < qval)) return root;
+            if(pval < rootval) root = root->left;
+            else root = root->right;
+        }
+        return nullptr;   
+    }
+};
+```
+
+#### 236 - 二叉树的最近公共祖先
+
+二叉树就没有二叉搜索树那么好的性质了
