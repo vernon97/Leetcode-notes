@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-12 22:12:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-15 21:59:34
+ * @LastEditTime: 2021-01-15 22:19:05
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week24.md
 -->
 
@@ -257,11 +257,45 @@ public:
 };
 ```
 
-#### 238 - 除自身以外数组的成绩
+#### 238 - 除自身以外数组的乘积
 
 > 请不要使用除法，且在 O(n) 时间复杂度内完成此题
 
-> 你可以在常数空间复杂度内完成这个题目吗
+> 你可以在常数空间复杂度内完成这个题目吗 （出于对空间复杂度分析的目的，输出数组不被视为额外空间。）
 
 **前后缀分解**
+前后缀分解是一个非常重要的技巧，将数组按照`i` 分为前半段前缀和后半段后缀 而前缀和后缀都可通过递推来实现；
 
+这里题目要求常数空间复杂度（输出数组不算） 相当于只能开一个数组，这里我们把前缀成绩直接存储在输出数组`res`中， 在求后缀的过程直接用一个变量`sub`代替
+
+```cpp
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> res(n, 0);
+        // * 前缀乘积 -> res
+        for(int i = 0; i < n; i++)
+        {
+            if(i == 0) res[i] = nums[0];
+            else res[i] = nums[i] * res[i - 1];
+        }
+        // * 后缀乘积 由于也不会用到 直接就用一个变量sub替代
+        int sub = 1;
+        for(int i = n - 1; ~i; i--)
+        {
+            if(i) res[i] = sub * res[i - 1];
+            else res[i] = sub;
+            sub *= nums[i];
+        }
+        return res;
+    }
+};
+```
+
+#### 239 - 滑动窗口最大值
+
+```diff
++ 单调队列
+```
+单调队列就是拿来求**滑动窗口最值**问题的， 直接默写8
