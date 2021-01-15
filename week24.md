@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-12 22:12:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-13 20:17:26
+ * @LastEditTime: 2021-01-15 21:59:34
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week24.md
 -->
 
@@ -205,4 +205,63 @@ public:
 ```
 
 这里指路图论总结专题 有两个算法 **在线：倍增法 和 离线：Tarjan**
+
+这里因为就查询一次，所以直接**标记法**就好了，分别记录从`root`到`p`和`q`的路径 重合的就是公共祖先
+找到最后一个就是最近公共祖先了
+
+总的来说还是不太正经 正经的LCA问题上面的两个算法还是要背好
+
+```cpp
+class Solution {
+public:
+    bool dfs(TreeNode* root, vector<TreeNode*>& path, TreeNode* target)
+    {
+        path.push_back(root);
+        if(root->val == target->val) return true;
+        if(root->left && dfs(root->left, path, target)) return true;
+        if(root->right && dfs(root->right, path, target)) return true;
+        path.pop_back();
+        return false;
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // 这里只用查询一次 就标记法？
+        vector<TreeNode*> pathp, pathq;
+        dfs(root, pathp, p);
+        dfs(root, pathq, q);
+        TreeNode* res = nullptr;
+        for(int i = 0; i < min(pathp.size(), pathq.size()); i++)
+        {
+            if(pathp[i]->val == pathq[i]->val)
+                res = pathp[i];
+            else break;
+        }
+        return res;
+    }
+};
+```
+
+#### 237 - 删除链表中的节点
+
+这题没有给任何前驱节点 怎么删呢？ **假扮后继**
+
+> 先把node后面的点删了 再把node改成后面删除点的val
+
+```cpp
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        // 前驱结点呢？？
+        node->val = node->next->val;
+        node->next = node->next->next;
+    }
+};
+```
+
+#### 238 - 除自身以外数组的成绩
+
+> 请不要使用除法，且在 O(n) 时间复杂度内完成此题
+
+> 你可以在常数空间复杂度内完成这个题目吗
+
+**前后缀分解**
 
