@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-12 22:12:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-13 20:09:40
+ * @LastEditTime: 2021-01-13 20:17:26
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week24.md
 -->
 
@@ -169,6 +169,10 @@ public:
 
 #### 235 - 二叉搜索树的最近公共祖先
 
+```diff
++ 最近公共祖先（LCA)
+```
+
 肯定是递归搜索了 和root比 一大一小就是当前的root为答案, 不然就往两边走
 相等直接返回即可（根据定义）
 
@@ -196,4 +200,9 @@ public:
 
 #### 236 - 二叉树的最近公共祖先
 
-二叉树就没有二叉搜索树那么好的性质了
+```diff
++ 最近公共祖先(LCA)问题
+```
+
+这里指路图论总结专题 有两个算法 **在线：倍增法 和 离线：Tarjan**
+
