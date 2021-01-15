@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-12 22:12:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-15 22:19:05
+ * @LastEditTime: 2021-01-15 22:41:34
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week24.md
 -->
 
@@ -298,4 +298,35 @@ public:
 ```diff
 + 单调队列
 ```
+
 单调队列就是拿来求**滑动窗口最值**问题的， 直接默写8
+
+注意队列是双端队列 用数组模拟就好
+
+```cpp
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> res;
+        int n = nums.size();
+        vector<int> q(n + 2, 0);
+        int hh = 0, tt = -1;
+        for(int i = 0; i < n; i++)
+        {
+            if(hh <= tt && q[hh] < i - k + 1) hh++;
+            while(hh <= tt && nums[q[tt]] <= nums[i]) tt--;
+            q[++tt] = i;
+            if(i >= k - 1) res.push_back(nums[q[hh]]);
+        }
+        return res;
+    }
+};
+```
+
+#### 240 - 搜索二维矩阵II
+
+有单调性搜索肯定考虑二分（明天再做吧）
+
+先搜行再搜列
+
+
