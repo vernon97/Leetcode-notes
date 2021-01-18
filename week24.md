@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-12 22:12:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-15 22:41:34
+ * @LastEditTime: 2021-01-18 17:59:21
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week24.md
 -->
 
@@ -325,8 +325,26 @@ public:
 
 #### 240 - 搜索二维矩阵II
 
-有单调性搜索肯定考虑二分（明天再做吧）
+有单调性搜索肯定考虑二分 但本题没有一个合适的全局单调性来处理 -> 很巧妙的一个做法
 
-先搜行再搜列
+![avatar](figs/50.jpeg)
 
+```cpp
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        if(matrix.empty() || matrix[0].empty()) return false;
+        int n = matrix.size(), m = matrix[0].size();
+        int i = 0, j = m - 1;
+        while(i < n && j >= 0)
+        {
+            int t = matrix[i][j];
+            if(t == target) return true;
+            else if (t > target) j--;
+            else i++;
+        }
+        return false;
+    }
+};
+```
 
