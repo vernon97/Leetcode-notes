@@ -5,12 +5,12 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-18 20:43:56
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-18 21:13:33
+ * @LastEditTime: 2021-01-18 21:27:20
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week27.md
 -->
 # Week 27 - Leetcode 261 - 270
 
-#### Leetcode 263 - 丑数
+#### 263 - 丑数
 
 丑数系列这个是做过很多了 
 
@@ -30,7 +30,7 @@ public:
 };
 ```
 
-#### Leetcode 264 - 丑数II
+#### 264 - 丑数II
 
 这个题 有点三路归并的意思在里面 
 
