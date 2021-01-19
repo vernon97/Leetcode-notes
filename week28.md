@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-01-18 21:14:09
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-18 21:58:08
+ * @LastEditTime: 2021-01-19 16:47:43
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week28.md
 -->
 # Week 28 - Leetcode 271 - 280
@@ -76,4 +76,36 @@ public:
         return l;
     }
 };
+```
+
+
+```cpp
+void tarjan(int u)
+{
+    dfn[u] = low[u] = ++timestamp;
+    stk[++top] = u, in_stk[u] = true;
+    for(int i = h[u]; ~i; i = ne[i])
+    {
+        int j = e[i];
+        if(!dfn[j])
+        {
+            tarjan(j);
+            low[u] = min(low[u], low[j]);
+        }
+        else if(in_stk[j]) 
+            low[u] = min(low[u], dfn[j]);
+    }
+    if(dfn[u] == low[u])
+    {
+        // 求当前的强连通分量
+        int y;
+        ++scc_cnt;
+        do
+        {
+            y = stk[top--];
+            in_stk[y] = false;
+            id[y] = scc_cnt;
+        } while(y != u);
+    }
+}
 ```
