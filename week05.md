@@ -5,8 +5,8 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-24 20:13:43
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-26 01:41:39
- * @FilePath: /Leetcode-notes/week05.md
+ * @LastEditTime: 2021-01-24 22:46:21
+ * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week05.md
 -->
 # Week 05 - Leetcode 41 - 50
 
@@ -201,6 +201,23 @@ public:
 
 ![avatar](figs/07.jpeg)
 因此`f[i]`就变成了`0 1...1 2...2 3...3 ......`，在动态规划时瓶颈就在于更新每个点的最小值时需要遍历所有能跳到`i`的点，而有了单调性以后就可以用第一个能跳到`i`的点更新了，这里无论是取哪一个点跳到`i`，其最终的结果是一样的，但是取第一个点和取最后一个点所需要的步数可能不相同，所以尽量选择靠前的点，这样步数就可能会减少，贪心的思想。
+
+```cpp
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int n = nums.size();
+        int f[n];
+        memset(f, 0, sizeof f);
+        for(int i = 1, j = 0; i < n; i++)
+        {
+            while(j + nums[j] < i) j++;
+            f[i] = f[j] + 1;
+        }
+        return f[n - 1];
+    }
+};
+```
 
 #### 46 - 全排列
 

@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-24 00:32:08
+ * @LastEditTime: 2021-01-25 16:34:36
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
@@ -15,9 +15,10 @@
 ```
 
 * ========`相关知识总结`=========
-* [常用数据结构](常用数据结构.md)
+* [数论](数论.md)
 * [图论相关](图论.md)
-* [动态规划](动态规划.md)
+* [常用数据结构 (待整理)](常用数据结构.md)
+* [动态规划 (待整理)](动态规划.md)
 * =========`笔试题整理`==========
 * [网易2021校招计算机视觉算法岗-笔试题-提前批](网易2021算法-提前批.md)
 * [网易2021校招算法岗-笔试题-第一批](网易2021算法02.md)
