@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-01-25 16:34:36
+ * @LastEditTime: 2021-01-25 22:26:59
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
@@ -15,7 +15,7 @@
 ```
 
 * ========`相关知识总结`=========
-* [数论](数论.md)
+* [数论相关](数论.md)
 * [图论相关](图论.md)
 * [常用数据结构 (待整理)](常用数据结构.md)
 * [动态规划 (待整理)](动态规划.md)
