@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-02-24 17:53:24
+ * @LastEditTime: 2021-02-24 20:03:12
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
@@ -59,4 +59,6 @@
 * [Week 27 - Leetcode 261 - 270](week27.md)
 * [Week 28 - Leetcode 271 - 280](week28.md)
 * [Week 29 - Leetcode 281 - 290](week29.md)
+* [Week 30 - Leetcode 291 - 300](week30.md)
+* ========`暂时不往下做了`=========
   
