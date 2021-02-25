@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-02-24 20:06:15
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-02-24 21:36:13
+ * @LastEditTime: 2021-02-25 16:04:40
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week30.md
 -->
 # Week 30 - Leetcode 291 - 300
@@ -87,3 +87,105 @@ public:
 ```
 
 ### 297 - 二叉树的序列化与反序列化
+
+当然序列化有很多种啦，这里用一个深搜的方法来序列化/反序列化
+
+如果只是前序遍历是没有办法确定二叉树的 但是加上了空节点的标记就可以了
+
+```cpp
+class Codec {
+public:
+    string path;
+public:
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        dfs_s(root);
+        return path;
+    }
+
+    void dfs_s(TreeNode* root)
+    {
+        if(root == nullptr) path += "#,";
+        else
+        {
+            path += to_string(root->val) + ',';
+            dfs_s(root->left);
+            dfs_s(root->right);
+        }
+        
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        int u = 0;
+        return dfs_d(data, u);
+    }
+    TreeNode* dfs_d(string& data, int& u) // ! 注意这里哦
+    {
+        if(data[u] == '#')
+        {
+            u += 2;
+            return nullptr;
+        }
+        else
+        {
+            int k = u;
+            while(data[u] != ',') u++;
+            TreeNode* root = new TreeNode(stoi(data.substr(k, u - k)));
+            u++; // 跳过逗号
+            root->left  = dfs_d(data, u);
+            root->right = dfs_d(data, u);
+            return root;
+        }
+    
+    }
+};
+```
+
+### 299 - 猜数字游戏
+
+确实没啥好说的 哈希记录重复数字
+
+```cpp
+class Solution {
+public:
+    string getHint(string secret, string guess) {
+        int a = 0, b = 0;
+        vector<int> shash(11, 0), ghash(11, 0);
+        for(int i = 0; i < secret.size(); i++)
+        {
+            shash[secret[i] - '0']++;
+            ghash[guess[i] - '0']++;
+            if(secret[i] == guess[i]) a++;
+        }
+        for(int i = 0; i < 10; i++)
+            b += min(shash[i], ghash[i]);
+        return to_string(a) + "A" + to_string(b - a) + "B";
+    }
+};
+```
+
+### 300 - 最长递增子序列
+
+这题LIS问题 基础动态规划了 `f[i]表示以nums[i]结尾的最长上升子序列长度`
+
+```cpp
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> f(n + 1, 1);
+        int res = 1;
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < i; j++)
+            {
+                if(nums[i] > nums[j])
+                {
+                    f[i] = max(f[i], f[j] + 1);
+                    res = max(res, f[i]);
+                }
+            }
+        return res;
+    }
+};
+```
