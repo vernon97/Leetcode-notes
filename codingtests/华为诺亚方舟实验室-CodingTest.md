@@ -5,11 +5,11 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-03-29 18:21:53
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-03-29 19:44:13
- * @FilePath: /Leetcode-notes/华为诺亚方舟实验室-CodingTest.md
+ * @LastEditTime: 2021-04-14 20:14:21
+ * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/codingtests/华为诺亚方舟实验室-CodingTest.md
 -->
 
-# Huawei - CodingTest - 崔金浩
+# Huawei - CodingTest
 
 ### 01 - 编程题01
 
