@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-04-14 20:05:45
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-04-16 18:15:40
+ * @LastEditTime: 2021-04-16 19:40:34
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week31.md
 -->
 # Week 31 - Leetcode 301 - 310
@@ -298,6 +298,131 @@ public:
 
 这里含冷冻期的状态共有三个：
 
-- **进入冷冻期**
+- **在冷冻期**
 - **已买入**
 - **今天卖出**
+
+![avatar](../figs/66.jpeg)
+有没有冷冻期的区别无非是把之前只有一个的卖出状态 拆成了今天卖出（手里有股票且不能买 和 在冷冻期（手里有股票且可以买 两个状态
+
+```cpp
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        vector<int> f(n + 1, -1e9), g(n + 1, -1e9), h(n + 1, -1e9);
+        f[0] = 0, g[0] = -prices[0];
+        for(int i = 1; i < n; i++)
+        {
+            f[i] = max(f[i - 1], h[i - 1]);
+            g[i] = max(g[i - 1], f[i - 1] - prices[i]);
+            h[i] = g[i - 1] + prices[i];
+        }
+        return max(f[n - 1], h[n - 1]);
+    }
+};
+```
+
+同样的 只需要前一个状态 那个空间可以优化成`o(1)` 注意缓存历史状态就行了
+
+```cpp
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int f = 0, g = -prices[0], h = -0x3f3f3f3f;
+        for(int i = 1; i < prices.size(); i++)
+        {
+            int f_cpy = f, g_cpy = g, h_cpy = h; 
+            f = max(f, h);
+            g = max(g, f_cpy - prices[i]);
+            h = g_cpy + prices[i];
+        }
+        return max(f, h);
+    }
+};
+```
+
+### 310 - 最小高度树
+
+```diff
++ 树形dp的经典问题
+```
+
+**记录最大距离最小的点**
+
+```cpp
+class Solution {
+public:
+    static const int N = 20020, M = N * 2;
+    int n;
+    int h[N], e[M], ne[M], idx = 0;
+    int d1[N], d2[N], p[N], up[N];
+public:
+    void add(int a, int b)
+    {
+        e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+    }
+    int dfs_down(int u, int father)
+    {
+        for(int i = h[u]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if(j == father) continue;
+            int d = dfs_down(j, u) + 1;
+            if(d >= d1[u])
+            {
+                d2[u] = d1[u];
+                d1[u] = d;
+                p[u] = j;
+            }
+            else if(d >= d2[u])
+            {
+                d2[u] = d;
+            }
+        }
+        return d1[u];
+    }
+    void dfs_up(int u, int father)
+    {
+        for(int i = h[u]; ~i; i = ne[i])
+        {
+            int j = e[i];
+            if(j == father) continue;
+            // 以父节点更新子节点
+            if(p[u] == j)
+                up[j] = max(up[u] + 1, d2[u] + 1);
+            else
+                up[j] = max(up[u] + 1, d1[u] + 1);
+            dfs_up(j, u);
+        }
+    }
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        memset(h, -1, sizeof h);
+        for(vector<int>& edge : edges)
+        {
+            add(edge[0], edge[1]);
+            add(edge[1], edge[0]);
+        }
+        // 1. 从上到下
+        dfs_down(0, -1);
+        // 2. 从下到上
+        dfs_up(0, -1);
+        // 3. 枚举根节点
+        int res = 0x3f3f3f3f;
+        vector<int> roots;
+        for(int i = 0; i < n; i++)
+        {
+            int d = max(up[i], d1[i]);
+            if(res > d)
+            {
+                res = d;
+                roots.clear();
+                roots.push_back(i);
+            }
+            else if (res == d)
+                roots.push_back(i);
+        }
+        return roots;
+    }
+};
+```
