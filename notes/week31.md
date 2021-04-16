@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-04-14 20:05:45
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-04-14 22:13:12
+ * @LastEditTime: 2021-04-16 18:15:40
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week31.md
 -->
 # Week 31 - Leetcode 301 - 310
@@ -123,4 +123,181 @@ public:
 };
 ```
 
+### 304 - 二维区域和检索 - 数组不可变
 
+这题就是上一题的推广 二维前缀和
+
+注意的点一个是下标要从0映射到1 另一个是是闭区间 所以`row1` 和 `col1`都要减去1
+
+```cpp
+class NumMatrix {
+public:
+    int n, m;
+    vector<vector<int>> s;
+public:
+    NumMatrix(vector<vector<int>>& matrix) {
+        n = matrix.size(), m = matrix[0].size();
+        s = vector<vector<int>>(n + 1, vector<int>(m + 1));
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= m; j++)
+                s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + matrix[i - 1][j - 1];
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        return s[row2 + 1][col2 + 1] - s[row2 + 1][col1] - s[row1][col2 + 1] + s[row1][col1];
+    }
+};
+```
+
+### 306 - 累加数
+
+判断一个字符串是不是斐波那契数列 但是没有分隔符
+
+**用高精度的方式来存每个数**
+
+枚举第一个数的长度和第二个数的长度，然后递归判断是不是斐波那契数列, 所以三个数分别是 `[a + 1, b]` 和 `[b + 1, c]` 和 `[c + 1, c + z.size()]`, 不断往后指就可以了
+
+时间复杂度：`o(n^3)` 枚举+判断
+
+不能枚举有前导0的数
+
+```cpp
+class Solution {
+public:
+    string add(string sa, string sb)
+    {
+        // 高精度加法
+        if(sa.size() < sb.size()) return add(sb, sa);
+        vector<int> a, b, res;
+        for(int i = sa.size() - 1; i >= 0; i--) a.push_back(sa[i] - '0');
+        for(int i = sb.size() - 1; i >= 0; i--) b.push_back(sb[i] - '0');
+        int t = 0;
+        for(int i = 0; i < a.size(); i++)
+        {
+            if(i < a.size()) t += a[i];
+            if(i < b.size()) t += b[i];
+            res.push_back(t % 10);
+            t /= 10;
+        }
+        if(t) res.push_back(t);
+        stringstream ss;
+        for(int i = res.size() - 1; i >= 0; i--)
+            ss << res[i];
+        return ss.str();
+    }
+    bool isAdditiveNumber(string num) {
+        // 枚举前两个数
+        for(int i = 0; i < num.size(); i++)
+            for(int j = i + 1; j + 1 < num.size(); j++) // 保证有第三个数
+            {
+                int a = -1, b = i, c = j;
+                while(true)
+                {
+                    if((b - a > 1 && num[a + 1] == '0')|| (c - b > 1 && num[b + 1] == '0')) break; // 有前导0;
+                    auto x = num.substr(a + 1, b - a), y = num.substr(b + 1, c - b);
+                    auto z = add(x, y);
+                    if(num.substr(c + 1, z.size()) != z) break;
+                    a = b, b = c, c += z.size();
+                    if(c + 1 == num.size()) return true;
+                }
+            }
+        return false;
+    }
+};
+```
+
+### 307 - 区域和检索 - 数组可修改
+
+能用树状数组就用树状数组，不行再用线段树；
+
+**树状数组**：代码更短 空间更少 时间更快
+
+```cpp
+int lowbit(int x)
+{
+    return x & (-x);
+}
+
+// 注意这里的更新是差值 不是修改
+void update(int i, int val)
+{
+    while(i <= len)
+    {
+        tree[i] += val;
+        i += lowbit(i);
+    }
+}
+//  求前缀和
+int query(int i)
+{
+    int sum = 0;
+    while(i > 0)
+    {
+        sum += tree[i];
+        i -= lowbit(i);
+    }
+}
+```
+
+所以本题就是树状数组的应用
+
+```cpp
+class NumArray {
+public:
+    int n;
+    vector<int> tree;
+    vector<int> nums;
+public:
+    // 树状数组
+    int lowbit(int x)
+    {
+        return x & (-x);
+    }
+    NumArray(vector<int>& nums) {
+        this->n = nums.size();
+        this->nums = nums;
+        tree = vector<int>(n + 1, 0);
+        for(int i = 1; i <= n; i++)
+            add(i, nums[i - 1]);
+    }
+
+    void add(int index, int val)
+    {
+        while(index <= n)
+        {
+            tree[index] += val;
+            index += lowbit(index);
+        }
+    }
+    
+    void update(int index, int val) {
+        int delta = val - nums[index];
+        nums[index] = val; 
+        add(index + 1, delta);
+    }
+
+    int query(int index)
+    {
+        int sum = 0;
+        while(index > 0)
+        {
+            sum += tree[index];
+            index -= lowbit(index);
+        }
+        return sum;
+    }
+    int sumRange(int left, int right) {
+        return query(right + 1) - query(left);
+    }
+};
+```
+
+### 309 - 最佳买卖股票时机含冷冻期
+
+经典的买卖股票问题了-> 状态机模型
+
+这里含冷冻期的状态共有三个：
+
+- **进入冷冻期**
+- **已买入**
+- **今天卖出**
