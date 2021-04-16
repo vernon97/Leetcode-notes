@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-04-14 20:05:45
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-04-16 19:40:34
+ * @LastEditTime: 2021-04-16 20:05:45
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week31.md
 -->
 # Week 31 - Leetcode 301 - 310
@@ -350,6 +350,9 @@ public:
 
 **记录最大距离最小的点**
 
+![avatar](../figs/67.jpeg)
+
+剩下的细节大概就是要建双向边，dfs的时候额外记录father就行了
 ```cpp
 class Solution {
 public:
