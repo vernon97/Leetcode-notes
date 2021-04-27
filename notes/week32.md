@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-04-16 19:41:05
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-04-27 20:55:16
+ * @LastEditTime: 2021-04-27 21:16:14
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week32.md
 -->
 # Week 32 - Leetcode 311 - 320
@@ -247,3 +247,41 @@ public:
 
 ### 316 - 去除重复字母
 
+给你一个字符串 s ，请你去除字符串中重复的字母，使得每个字母只出现一次。需保证 返回结果的字典序最小（要求不能打乱其他字符的相对位置)
+
+去掉重复字母还不算 还要字典序最小 -> 肯定是贪心删除 
+
+**做法：**
+
+每次判断答案字符串的最后一个字母`T[j]` 大于 `S[i]` 且 `T[j]`可删除 -> 删除 直到不行
+维持这样的偏序关系 最终得到字典序最优的解
+
+- 使用栈来贪心的构造最终的字符串，栈的更新规则如下。
+- 前提是当前字符没有在栈中出现。如果当前字符比栈顶字符的值小，且栈顶字符不是最后一次出现，则栈顶出栈。
+- 重复 2 直到栈空或栈顶不满足出栈条件。此时，将当前字符压入栈中，且标记当前字符出现过。
+- 最后将栈中元素从栈底到栈顶的顺序输出。
+
+```cpp
+class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+        string stk;
+        unordered_map<char, int> last;
+        unordered_set<char> instack;
+        for(int i = 0; i < s.size(); i++) last[s[i]] = i;
+        for(int i = 0; i < s.size(); i++)
+        {
+            char c = s[i];
+            if(instack.count(c)) continue;
+            while(stk.size() && stk.back() > c && last[stk.back()] > i)
+            {
+                instack.erase(stk.back());
+                stk.pop_back();
+            }
+            stk.push_back(c);
+            instack.insert(c);
+        }
+        return stk;
+    }
+};
+```
