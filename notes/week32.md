@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-04-16 19:41:05
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-04-16 20:41:58
+ * @LastEditTime: 2021-04-27 20:55:16
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week32.md
 -->
 # Week 32 - Leetcode 311 - 320
@@ -40,3 +40,210 @@ public:
     }
 };
 ```
+
+### 313 - 超级丑数
+
+复习一下丑数系列：
+
+#### 263 - 丑数
+
+只包含质因子2, 3, 5 的话 就把质因子2，3， 5 除干净 看看余数是不是1就可以了
+
+```cpp
+class Solution {
+public:
+    bool isUgly(int num) {
+        if(num < 1) return false;
+        while(num % 2 == 0) num /= 2;
+        while(num % 3 == 0) num /= 3;
+        while(num % 5 == 0) num /= 5;
+        return num == 1;
+    }
+};
+```
+
+#### 264 - 丑数II
+
+丑数的定义是一样的 请找出第`n`个丑数
+
+有点三路归并的意思, 用 `i j k`来表示丑数序列中因子`2 3 5`对应的指针 避免一个丑数同时有多个因子
+
+每次更新 `2 * ugs[i], 3 * ugs[j], 5 * ugs[k]` 中最小的一个追加在序列内
+
+然后判断更新的数是不是2 3 5 的因子 是的话 对应指针++
+
+```cpp
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        vector<int> ugs;
+        ugs.push_back(1);
+        int i = 0, j = 0, k = 0;
+        while(--n) // 注意这里是--n 第一个丑数是1
+        {
+            int cur_ug = min(min(ugs[i] * 2, ugs[j] * 3), ugs[k] * 5);
+            ugs.push_back(cur_ug);
+            if(cur_ug % 2 == 0) i++;
+            if(cur_ug % 3 == 0) j++;
+            if(cur_ug % 5 == 0) k++; 
+        }
+        return ugs.back();
+    }
+};
+```
+
+对于本题无非是`丑数II`这个题的扩展，把`2 3 5`的质数列表扩展即可
+
+但是**这里找最小值可以换成堆** 
+
+1. o(nk)
+   
+```cpp
+class Solution {
+public:
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        int m = primes.size();
+        vector<int> pointers(m, 0);
+        vector<int> ugs(1, 1);
+        while(--n)
+        {
+            // 1. 查找最小的质数和
+            int cur_ug = INT_MAX;
+            for(int i = 0; i < m; i++)
+                cur_ug = min(cur_ug, primes[i] * ugs[pointers[i]]);
+            // 2. 更新pointers
+            for(int i = 0; i < m; i++)
+                if(cur_ug % primes[i] == 0) pointers[i]++;
+            ugs.push_back(cur_ug);
+        }
+        return ugs.back();
+    }
+};
+```
+
+2. o(nlogk)
+   
+```cpp
+class Solution {
+public:
+    using PII = pair<int, int>;
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        priority_queue<PII, vector<PII>, greater<PII>> heap;
+        for(int x : primes) heap.emplace(x, 0);
+        vector<int> q(n);
+        q[0] = 1;
+        for(int i = 1; i < n;)
+        {
+            auto t = heap.top(); heap.pop();
+            if(q[i - 1] < t.first) q[i++] = t.first; // 判断丑数序列是否要更新 
+            int idx = t.second, p = t.first / q[idx];
+            heap.emplace(p * q[idx + 1], idx + 1); // 把下一个可能的丑数加入heap
+        }
+        return q.back();
+    }
+};
+```
+
+### 315 - 计算右侧小于当前元素的数量
+
+保序离散化 + 树状数组 经典了吧 拿离散后的元素当下标 这样可以区间查询到比x大/小的元素个数了
+
+保序离散化
+
+```cpp
+sort(nums.begin(), nums.end());
+nums.erase(unique(nums.begin(), nums.end()), nums.end());
+
+int find(int x)
+{
+    return lower_bound(nums.begin(), nums.end(), x) - nums.begin() + 1; // 注意要映射到1开始
+}
+```
+
+树状数组
+
+```cpp
+int tree[N];
+
+int lowbit(int x)
+{
+    return x & (-x);
+}
+
+int add(int i, int x)
+{
+    while(i <= n)
+    {
+        tree[i] += x;
+        i += lowbit(i);
+    }
+}
+
+int query(int i)
+{
+    int sum = 0;
+    while(i > 0)
+    {
+        sum += tree[i];
+        i -= lowbit(i);
+    }
+    return sum;
+}
+```
+
+代码如下：
+
+```cpp
+class Solution {
+public:
+    static const int N = 100010;
+    int n;
+    int tree[N];
+    vector<int> q;
+public:
+    int lowbit(int x)
+    {
+        return x & -x;
+    }
+    void add(int i, int x)
+    {
+        while(i <= n)
+        {
+            tree[i] += x;
+            i += lowbit(i); 
+        }
+    }
+    int query(int i)
+    {
+        int sum = 0;
+        while(i > 0)
+        {
+            sum += tree[i];
+            i -= lowbit(i);
+        }
+        return sum;
+    }
+    int find(int x)
+    {
+        return lower_bound(q.begin(), q.end(), x) - q.begin() + 1;
+    }
+    vector<int> countSmaller(vector<int>& nums) {
+        n = nums.size();
+        q = nums;
+        sort(q.begin(), q.end());
+        q.erase(unique(q.begin(), q.end()), q.end());
+        vector<int> res(n);
+        // 1. 插入树状数组
+        for(int i = n - 1; i >= 0; i--)
+        {
+            int idx = find(nums[i]);
+            res[i] = query(idx - 1);
+            add(idx, 1);
+        }
+        return res;
+    }
+};
+```
+
+### 316 - 去除重复字母
+
