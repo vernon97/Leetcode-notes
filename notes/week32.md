@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-04-16 19:41:05
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-04-27 21:16:14
+ * @LastEditTime: 2021-05-05 21:07:07
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week32.md
 -->
 # Week 32 - Leetcode 311 - 320
@@ -282,6 +282,53 @@ public:
             instack.insert(c);
         }
         return stk;
+    }
+};
+```
+
+### 318 - 最大单词长度乘积
+
+两次枚举肯定是跑不掉的，但是如何快速判断两个字符串是否有相同字母？
+
+**二进制枚举的思想**
+
+用一个二进制数来表示每个字母是否出现过，这样用与运算就可判断是否有相同字母同时出现。
+
+```cpp
+class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+        int n = words.size();
+        vector<int> states(n, 0);
+        for(int i = 0; i < n; i++)
+        {
+            string& word = words[i];
+            for(int j = 0; j < word.size(); j++)
+                states[i] = states[i] | (1 << word[j] - 'a');
+        }
+        int res = 0;
+        for(int i = 0; i < n; i++)
+            for(int j = i + 1; j < n; j++)
+                if((states[i] & states[j]) == 0)
+                    res = max(res, static_cast<int>(words[i].size() * words[j].size()));
+        return res;
+    }
+};
+```
+
+### 319 - 灯泡开关
+
+数论题真的不会 记一下推导吧~
+
+![avatar](../figs/70.jpeg)
+
+所以最终返回`sqrt(n)`的下取整就好
+
+```cpp
+class Solution {
+public:
+    int bulbSwitch(int n) {
+        return static_cast<int>(sqrt(n));
     }
 };
 ```
