@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-05-05 21:07:20
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-05-06 20:25:32
+ * @LastEditTime: 2021-05-07 14:18:24
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week33.md
 -->
 # Week 33 - Leetcode 321 - 330
@@ -228,6 +228,8 @@ public:
 
 保序离散化 + 树状数组查询区间 代码里还是有不少细节的 建议多看看
 
+此外记得提前把0加进去 `s[0] = 0;`
+
 然后边界问题 记得区间长度用`long long`来存
 
 ```cpp
@@ -290,6 +292,111 @@ public:
             sum += x;
             res += query(find(sum - lower)) - query(find(sum - upper - 1));
             add(find(sum), 1);
+        }
+        return res;
+    }
+};
+```
+
+### 328 - 奇偶链表
+
+按照奇偶位数重排成两个链表然后拼在一起就可以了 记住要置`nullptr`
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(!head) return head;
+        ListNode* dummy_odd  = new ListNode(-1), *cur_odd  = dummy_odd;
+        ListNode* dummy_even = new ListNode(-1), *cur_even = dummy_even;
+        // 1. 按照奇偶分别排列
+        for(int i = 1; head; i++)
+        {
+            if(i & 1)
+                cur_odd = cur_odd->next = head;
+            else 
+                cur_even = cur_even->next = head;
+            head = head->next;
+        }
+        // 2. 拼成同一个链表
+        cur_odd->next = dummy_even->next;
+        cur_even->next = nullptr;
+        return dummy_odd->next;
+    }
+};
+```
+
+### 329 - 矩阵中的最长递增路径
+
+上下左右四个方向是连通的, 要找到最长的递增路径（严格递增）
+
+实际上是用记忆化搜索实现的动态规划问题，要想动态规划必须保证的前提是**没有环形依赖**
+
+这里由于限制了严格递增，肯定是没有环形路径存在的，所以可以动态规划来解，但是方向是从上下左右，这里用**记忆化搜索**来实现
+
+剩下的就是一个标准的矩阵搜索模板了
+
+```cpp
+class Solution {
+public:
+    int n, m;
+    vector<vector<int>> f;
+    int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1};
+public:
+    int dp(vector<vector<int>>& matrix, int x, int y)
+    {
+        if(f[x][y] != -1) return f[x][y];
+        f[x][y] = 1;
+        for(int i = 0; i < 4; i++)
+        {
+            int nx = x + dx[i], ny = y + dy[i];
+            if(nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+            if(matrix[nx][ny] <= matrix[x][y]) continue; // 注意这里限制的是严格递增
+            f[x][y] = max(f[x][y], dp(matrix, nx, ny) + 1);
+        }
+        return f[x][y];
+    }
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        // 记忆化搜索
+        n = matrix.size(), m = matrix[0].size();
+        f = vector<vector<int>>(n + 1, vector<int>(m + 1, -1));
+        int res = 1;
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+                res = max(res, dp(matrix, i, j));
+        return res; 
+    }
+};
+```
+
+### 330 - 按要求补齐数组
+
+其实是个贪心题 贪心题就记一记方法就好
+
+![avatar](../figs/72.jpeg)
+
+所以是贪心选更大的数就好（nums已经是有序的了）
+
+```cpp
+class Solution {
+public:
+    int minPatches(vector<int>& nums, int n) {
+        int res = 0, i = 0;
+        long long x = 1; // 数可能很大 所以这里是long long
+        while(x <= n)
+        {
+            if(i < nums.size() && nums[i] <= x) x += nums[i++];  
+            else x += x, res ++;
         }
         return res;
     }

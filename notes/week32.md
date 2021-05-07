@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-04-16 19:41:05
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-05-05 21:07:07
+ * @LastEditTime: 2021-05-06 20:50:38
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week32.md
 -->
 # Week 32 - Leetcode 311 - 320
@@ -288,6 +288,10 @@ public:
 
 ### 318 - 最大单词长度乘积
 
+```diff
++ 注意位运算的优先级不如 == 哇！ 那个括号可不能省略
+```
+
 两次枚举肯定是跑不掉的，但是如何快速判断两个字符串是否有相同字母？
 
 **二进制枚举的思想**
@@ -309,7 +313,7 @@ public:
         int res = 0;
         for(int i = 0; i < n; i++)
             for(int j = i + 1; j < n; j++)
-                if((states[i] & states[j]) == 0)
+                if((states[i] & states[j]) == 0) // 注意这个括号
                     res = max(res, static_cast<int>(words[i].size() * words[j].size()));
         return res;
     }
