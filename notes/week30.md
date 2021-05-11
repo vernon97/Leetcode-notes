@@ -5,8 +5,8 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-02-24 20:06:15
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-02-25 16:04:40
- * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/week30.md
+ * @LastEditTime: 2021-05-10 15:26:44
+ * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week30.md
 -->
 # Week 30 - Leetcode 291 - 300
 
@@ -188,4 +188,56 @@ public:
         return res;
     }
 };
+```
+
+复习一下记录方案的LIS 和 贪心版本nlogn的LIS
+
+
+**记录方案的LIS：**
+
+```cpp
+for(int i = 1; i <= n; i++)
+{
+    f[i] = 0;
+    g[i] = 0;
+    for(int j = 1; j < i; j ++)
+    {
+        if(a[j] < a[i])
+        {
+            if(f[i] < f[j] + 1)
+            {
+                f[i] = f[j] + 1;
+                g[i] = j;
+            }
+        }
+    }
+}
+int k = 1;
+for(int i = 1; i <= n; i++)
+    if(f[k] < f[i])
+        k = i;
+for(int i = 0, len = f[k]; i < len; i++)
+{
+    printf("%d ", a[k]);
+    k = g[k];
+}
+```
+
+**o(nlogn)的**
+
+```cpp
+    f[cnt++] = w[0];
+    for (int i = 1; i < n; i++) {
+        if (w[i] > f[cnt-1]) f[cnt++] = w[i];
+        else {
+            int l = 0, r = cnt - 1;
+            while (l < r) {
+                int mid = (l + r) >> 1;
+                if (f[mid] >= w[i]) r = mid;
+                else l = mid + 1;
+            }
+            f[r] = w[i];
+        }
+    }
+    cout << cnt << endl;
 ```
