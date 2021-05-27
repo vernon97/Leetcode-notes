@@ -5,11 +5,20 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-05-27 14:21:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-05-27 14:22:16
+ * @LastEditTime: 2021-05-27 14:38:35
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week36.md
 -->
+# Week 35 - Leetcode 341 - 350
 
 ### 352 - 将数据流变为多个不相交区间
+
+
+**C++中的迭代器失效问题：**
+分为顺序类容器和关联类容器两种：
+顺序类容器（如Vector等）: 删除元素会导致后面的元素迭代器失效，但是erase会返回新的迭代器，迭代器支持随机访问 `+ x 操作`
+关联类容器（如Map Set等）:删除元素不会导致后面的元素迭代器失效，但迭代器仅支持双向访问，不支持速记访问`++, --`
+
+本题就是用Set来维护区间，**找到第一个左端点比val大的元素** 比较两边的端点和`val`来决定是新建区间还是合并区间
 
 ```cpp
 class SummaryRanges {
@@ -57,7 +66,6 @@ public:
             S.insert({val, val});
         }
     }
-    
     vector<vector<int>> getIntervals() {
         vector<vector<int>> res;
         for(auto p : S)
