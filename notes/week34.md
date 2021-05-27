@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-05-07 11:42:23
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-05-11 10:46:07
+ * @LastEditTime: 2021-05-17 13:14:45
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week34.md
 -->
 # Week 34 - Leetcode 331 - 340
@@ -200,4 +200,82 @@ public:
 
 2. o(nl^2)版本
 
+```cpp
+class Solution {
+public:
+    bool check(string& s)
+    {
+        for(int i = 0, j = s.size() - 1; i < j; i++, j--)
+        {
+            if(s[i] != s[j]) return false;
+        }
+        return true;
+    }
+    vector<vector<int>> palindromePairs(vector<string>& words) {
+        unordered_map<string, int> hash;
+        vector<vector<int>> res;
+        for(int i = 0; i < words.size(); i++)
+        {
+            string s = words[i];
+            reverse(s.begin(), s.end());
+            hash[s] = i;
+        }
+        for(int i = 0; i < words.size(); i++)
+        {
+            string& s = words[i];
+            // 枚举分割点
+            for(int j = 0; j <= s.size(); j++)
+            {
+                string left  = s.substr(0, j);
+                string right = s.substr(j);
+                if(hash.count(left) && check(right) && hash[left] != i)  res.push_back({i, hash[left]});
+                if(hash.count(right) && check(left) &&hash[right] != i && s.size() != words[hash[right]].size()) res.push_back({hash[right], i});
+            }
+        }
+        return res;
+    }
+};
+```
 
+### 337 - 打家劫舍III
+
+经典的树形DP问题，返回值是选 or 不选 组成的一个pair
+
+```cpp
+class Solution {
+public:
+    using PII = pair<int, int>;
+    int rob(TreeNode* root) {
+        // 树形dp 返回状态是选 or 不选
+        PII res = dfs(root);
+        return max(res.first, res.second);
+    }
+    PII dfs(TreeNode* root)
+    {
+        if(root == nullptr) return {0, 0};
+        PII left = dfs(root->left), right = dfs(root->right);
+        // 1. 不选root
+        int not_select_root = max(left.first, left.second) + max(right.first, right.second);
+        int select_root = left.first + right.first + root->val;
+        return {not_select_root, select_root};
+    }
+};
+```
+
+### 338 - 比特位计数
+
+计算从`1 - n` 中, 每个数的二进制表示中1的个数
+
+递推：对于每个数`x`的二进制表示中1的个数，可以通过 `x >> 1` 的个数 加上最后一位是否为1来实现；
+
+```cpp
+class Solution {
+public:
+    vector<int> countBits(int num) {
+        vector<int> f(num + 1, 0);
+        for(int i = 1; i <= num; i++)
+            f[i] = f[i >> 1] + (i & 1);
+        return f;
+    }
+};
+```
