@@ -5,13 +5,12 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-05-27 14:21:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-05-27 14:38:35
+ * @LastEditTime: 2021-05-27 15:20:24
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week36.md
 -->
-# Week 35 - Leetcode 341 - 350
+# Week 36 - Leetcode 351 - 360
 
 ### 352 - 将数据流变为多个不相交区间
-
 
 **C++中的迭代器失效问题：**
 分为顺序类容器和关联类容器两种：
@@ -71,6 +70,36 @@ public:
         for(auto p : S)
             if(p.first != -INF && p.first != INF)
                 res.push_back({static_cast<int>(p.first), static_cast<int>(p.second)});
+        return res;
+    }
+};
+```
+
+### 353 - 俄罗斯信封问题
+
+一看就是先排序 然后最长上升子序列问题hiahia
+
+说着就复习一下最长上升子序列问题的解法
+
+
+这题除了排序一维然后 LIS即可
+
+```cpp
+class Solution {
+public:
+    int maxEnvelopes(vector<vector<int>>& envelopes) {
+        sort(envelopes.begin(), envelopes.end());
+        int n = envelopes.size(), res = 0;
+        vector<int> f(n + 1);
+        for(int i = 0; i < n; i++)
+        {
+            f[i] = 1;
+            auto& e = envelopes[i];
+            for(int j = 0; j < i; j++)
+                if(e[0] != envelopes[j][0] && e[1] > envelopes[j][1])
+                    f[i] = max(f[i], f[j] + 1);
+            res = max(res, f[i]);
+        }
         return res;
     }
 };
