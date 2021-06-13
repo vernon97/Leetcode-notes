@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-05-27 14:21:37
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-05-27 15:20:24
+ * @LastEditTime: 2021-06-14 00:05:33
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week36.md
 -->
 # Week 36 - Leetcode 351 - 360
@@ -99,6 +99,114 @@ public:
                 if(e[0] != envelopes[j][0] && e[1] > envelopes[j][1])
                     f[i] = max(f[i], f[j] + 1);
             res = max(res, f[i]);
+        }
+        return res;
+    }
+};
+```
+
+### 355 - 设计推特
+
+这题有两个细节注意下：
+
+- 1. 自己也算自己的follwer
+- 2. 按时间戳多路归并，直接存vector就可以（默认按顺序排序），要保存timestamp，tweetId，userId，idx(归并排序的指针)
+
+```cpp
+class Twitter {
+public:
+    // p.first : timestamp, p.second : 
+    using PII = pair<int, int>;
+    unordered_map<int, vector<PII>> tweets;
+    unordered_map<int, unordered_set<int>> followers;
+    int timestamp;
+public:
+    /** Initialize your data structure here. */
+    Twitter() {
+        timestamp = 0;
+    }
+    
+    /** Compose a new tweet. */
+    void postTweet(int userId, int tweetId) {
+        tweets[userId].emplace_back(timestamp++, tweetId);
+    }
+    
+    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    vector<int> getNewsFeed(int userId) {
+        // Heap Sort
+        // timestamp,tweeter_id, user_id, cur_idx
+        priority_queue<vector<int>> heap;
+        vector<int> res;
+        auto& followers_list = followers[userId];
+        followers_list.insert(userId);
+        // NOTE: 自己发的也算
+        for(int f : followers_list)
+        {
+            auto& f_tweets_list = tweets[f];
+            if(tweets[f].size())
+            {
+                int max_len = f_tweets_list.size() - 1;
+                auto t = f_tweets_list[max_len];
+                heap.push({t.first, t.second, f, max_len});
+            }
+        }
+        for(int i = 0; i < 10 && heap.size(); i++)
+        {
+            auto info = heap.top(); heap.pop();
+            int tid = info[1], uid = info[2], cur_idx = info[3];
+            res.push_back(tid);
+            cur_idx--;
+            if(cur_idx >= 0)
+            {
+                auto new_tweet = tweets[uid][cur_idx];
+                heap.push({new_tweet.first, new_tweet.second, uid, cur_idx});
+            }
+        }
+        return res;
+    }
+    
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    void follow(int followerId, int followeeId) {
+        followers[followerId].insert(followeeId);
+    }
+    
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    void unfollow(int followerId, int followeeId) {
+        followers[followerId].erase(followeeId);
+    }
+};
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter* obj = new Twitter();
+ * obj->postTweet(userId,tweetId);
+ * vector<int> param_2 = obj->getNewsFeed(userId);
+ * obj->follow(followerId,followeeId);
+ * obj->unfollow(followerId,followeeId);
+ */
+```
+
+### 356 - 计算各个位数不相同的数字个数
+
+
+总得来说是一个排列组合问题， 枚举每一位出现的可能性即可；
+
+额外要注意的是不能有前导0（但是只有0可以）
+
+所以举例，5位数：`9 * 9 * 8 * 7 * 6` 最后累加到一起即可
+
+
+```cpp
+class Solution {
+public:
+    int countNumbersWithUniqueDigits(int n) {
+        int res = 1;
+        n = min(n, 10);
+        if(!n) return 1;
+        for(int i = 1, j = 9, last = 9; i <= n; i++, j--)
+        {
+            res += last;
+            last = last * j;
         }
         return res;
     }
