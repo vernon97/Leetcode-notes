@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-06-21 21:38:58
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-06-23 10:28:40
+ * @LastEditTime: 2021-06-28 23:17:26
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/SQL题目合集.md
 -->
 
@@ -118,4 +118,4 @@ GROUP BY Num,SerialNumberSubGroup HAVING COUNT(1) >= 3)
 这里整个思路就是按照[link](https://leetcode-cn.com/problems/consecutive-numbers/solution/sql-server-jie-fa-by-neilsons/)的方法来，先按原顺序标序号，再按照id 分组后
 
 
-
+https://hit-alibaba.github.io/interview/basic/network/HTTPS.html

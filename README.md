@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-06-23 10:30:12
+ * @LastEditTime: 2021-06-29 00:43:13
  * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
 -->
 # Table of contents
@@ -23,6 +23,7 @@
 * [一些基础算法✅](algorithms/基础算法.md)
 * [动态规划 (待整理)](algorithms/动态规划.md)
 * =========`笔试题整理`==========
+* [🍑Leetcode 周赛 266场](codingtests/Leetcode-266周赛.md)
 * [🤖字节跳动夏令营2021-笔试题-机器人方向](codingtests/字节跳动-夏令营笔试-1.md)
 * [美团暑期实习笔试2021.03.13](codingtests/美团暑期实习.md)
 * [微软2021笔试02.28场](codingtests/微软暑期实习笔试2021.02.26.md)
