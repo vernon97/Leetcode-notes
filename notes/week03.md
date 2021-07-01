@@ -134,7 +134,7 @@ public:
 
 #### 25 - K个一组反转链表
 
-![avatar](figs/01.png)
+![avatar](../figs/01.png)
 
 1. 是否剩余k个
 2. 内部指向反转
@@ -321,7 +321,7 @@ public:
 ```
 
 #### 30 - 串联所有单词的字串
-![avatar](figs/02.jpeg)
+![avatar](../figs/02.jpeg)
 
 这里的额外复杂度是substr操作所带来的, C++17中引入的`std::string_view`可以一定程度上解决这个问题； `string_view  sv = s`
 __1. substr版 o(w*n)__

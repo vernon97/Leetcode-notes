@@ -99,7 +99,7 @@ public:
 
 除了这个之外, **状态机模型**:
 
-![avatar](figs/36.jpeg)
+![avatar](../figs/36.jpeg)
 
 ```cpp
 class Solution {

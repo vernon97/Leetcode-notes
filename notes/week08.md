@@ -94,7 +94,7 @@ public:
 > 用第一行去记录每一列是否出现过0， 第一列去记录每一行是否出现过0； 而第一行和第一列是否出现过0可以用额外的两个变量记录；
 
 这样就保证了常数空间;
-![avatar](figs/14.jpeg)
+![avatar](../figs/14.jpeg)
 
 **空间：o(n + m)**
 
@@ -213,7 +213,7 @@ void quick_sort(int[] q, int l, int r)
 
 这里是三路快排的应用，方法如下：
 
-![avatar](figs/15.jpeg)
+![avatar](../figs/15.jpeg)
 
 ```cpp
 class Solution {

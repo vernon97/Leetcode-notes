@@ -161,7 +161,7 @@ public:
 
 #### 105 - 从前序和中序遍历序列构造二叉树
 
-![avatar](figs/22.jpeg)
+![avatar](../figs/22.jpeg)
 
 查找根节点位置 -> 哈希表
 重点就在这几个区间的index怎么算上

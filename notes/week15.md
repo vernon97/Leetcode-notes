@@ -74,7 +74,7 @@ public:
 
 #### 143 - 重排链表
 
-![avatar](figs/30.jpeg)
+![avatar](../figs/30.jpeg)
 注意的点就在这个如何保证左半段链表node个数大于等于右边上了
 
 ```cpp
@@ -275,7 +275,7 @@ public:
 
 用到的数据结构: **双链表**
 
-![avatar](figs/31.jpeg)
+![avatar](../figs/31.jpeg)
 
 ```cpp
 class LRUCache {

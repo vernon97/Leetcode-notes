@@ -82,7 +82,7 @@ public:
 
 #### 114 - 二叉树展开为链表
 
-![avatar](figs/23.jpeg)
+![avatar](../figs/23.jpeg)
 
 ```cpp
 class Solution {
@@ -168,7 +168,7 @@ public:
 
 如果要求常数空间的话，就要把next指针利用上完成层序遍历， 这里是通过当前层给下一层填写next指针
 
-![avatar](figs/24.jpeg)
+![avatar](../figs/24.jpeg)
 
 2. 常数空间版
 

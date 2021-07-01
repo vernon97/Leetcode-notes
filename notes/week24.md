@@ -86,10 +86,10 @@ public:
 
 经典的数位DP了 快来复习一下数位DP
 
-![avatar](figs/47.jpeg) 
+![avatar](../figs/47.jpeg) 
 
 这一题 我们枚举的是每一位中1的出现次数
-![avatar](figs/48.jpeg)
+![avatar](../figs/48.jpeg)
 
 ```cpp
 class Solution {
@@ -327,7 +327,7 @@ public:
 
 有单调性搜索肯定考虑二分 但本题没有一个合适的全局单调性来处理 -> 很巧妙的一个做法
 
-![avatar](figs/50.jpeg)
+![avatar](../figs/50.jpeg)
 
 ```cpp
 class Solution {

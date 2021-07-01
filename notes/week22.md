@@ -234,7 +234,7 @@ public:
 ```
 这个时间复杂度真的差很多 
 
-![avatar](figs/41.jpg)
+![avatar](../figs/41.jpg)
 
 #### 213 - 打家劫舍II
 
@@ -307,7 +307,7 @@ for(int i = 1, j = 0; i <= n; i++)
 
 最长回文前缀常和KMP联系到一起，具体操作如下：
 
-![avatar](figs/42.jpeg)
+![avatar](../figs/42.jpeg)
 
 ```cpp
 class Solution {
@@ -482,7 +482,7 @@ public:
 
 但是这个题的边界问题很多，主要是**同一根扫描线出现不同点的遍历顺序问题**, 分段讨论吧（很坑）
 
-![avatar](figs/43.png)
+![avatar](../figs/43.png)
 
 **总结遍历规则：**
 

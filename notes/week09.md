@@ -109,7 +109,7 @@ public:
 
 这一题可以说是单调栈的典型应用了;
 
-![avatar](/figs/16.jpeg)
+![avatar](/../figs/16.jpeg)
 
 >单调栈： 寻找左边/右边 第一个比当前元素小/大的位置
 
@@ -152,7 +152,7 @@ public:
 
 这题思路还挺难的，实际是上一个题的扩展；
 
-![avatar](figs/17.jpeg)
+![avatar](../figs/17.jpeg)
 heights可以逐层递推得到
 
 ```cpp
@@ -305,7 +305,7 @@ public:
 
 格雷码生成是有规律的 可以记一下：
 
-![avatar](figs/18.jpeg)
+![avatar](../figs/18.jpeg)
 
 镜像复制，前半段最后补0 后半段最后补1
 

@@ -61,8 +61,8 @@ void divide(int x)
 **把他们都加起来 最终得到的就是 p 的所有因子个数**
 
 举例来说
-![avatar](figs/34.jpeg)
-![avatar](figs/35.jpeg)
+![avatar](../figs/34.jpeg)
+![avatar](../figs/35.jpeg)
 
 最后就是求一下5的质因子个数就好了hh
 

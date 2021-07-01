@@ -55,7 +55,7 @@ public:
 o(1)是不是有公式呀..
 
 **同余** 数论真的好难...
-![avatar](figs/52.jpeg)
+![avatar](../figs/52.jpeg)
 
 ```cpp
 class Solution {
@@ -80,7 +80,7 @@ public:
 
 > 你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？
 
-![avatar](figs/53.jpeg)
+![avatar](../figs/53.jpeg)
 
 ```cpp
 class Solution {

@@ -13,7 +13,7 @@
 
 #### 201 - 数字范围按位与
 
-![avatar](figs/37.jpeg)
+![avatar](../figs/37.jpeg)
 
 代码就是找到那个分界线 把后面的都置0 即可(先左移再右移)
 
@@ -205,7 +205,7 @@ public:
 
 感觉做过.jpg
 
-![avatar](figs/38.jpeg)
+![avatar](../figs/38.jpeg)
 
 1. 迭代
    

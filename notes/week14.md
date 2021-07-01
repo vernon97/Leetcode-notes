@@ -198,7 +198,7 @@ public:
 
 #### 135 - 分发糖果
 
-![avatar](figs/27.jpeg)
+![avatar](../figs/27.jpeg)
 
 这题实际上就是 每个小朋友得到的最少糖果数是根据左右两边 连续下降的次数 决定的；
 比如图上的情况 这个小朋友至少要得到3个 才能满足要求；
@@ -249,7 +249,7 @@ public:
 
 #### 137 - 只出现一次的数字ii
 
-![avatar](figs/28.jpeg)
+![avatar](../figs/28.jpeg)
 
 主要是这个按位的状态转移方程怎么来的很奇怪
 
@@ -305,7 +305,7 @@ public:
 
 但这个需要额外开一个哈希表去记录对应关系, 根据链表的特性可以节省这个空间；
 
-![avatar](figs/29.jpeg)
+![avatar](../figs/29.jpeg)
 
 ```cpp
 class Solution {

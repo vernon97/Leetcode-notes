@@ -139,7 +139,7 @@ public:
 
 经典问题了 在各种地方都出现过(x)
 
-![avatar](figs/09.jpeg)
+![avatar](../figs/09.jpeg)
 
 ```cpp
 class Solution {
@@ -365,7 +365,7 @@ public:
 
 __计数DP__
 
-![avatar](figs/10.jpeg)
+![avatar](../figs/10.jpeg)
 
 ```cpp
 class Solution {

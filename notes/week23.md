@@ -45,7 +45,7 @@
 
 `f[i, j] = min(f[i - 1, j], f[i, j - 1], f[i - 1, j - 1]) + 1`
 
-![avatar](figs/44.jpeg)
+![avatar](../figs/44.jpeg)
 
 代码没什么好说的 主要是这个状态转移方程很难想
 
@@ -78,7 +78,7 @@ public:
 
 **这题居然是二分？！**
 
-![avatar](figs/45.jpeg)
+![avatar](../figs/45.jpeg)
 
 ```cpp
 class Solution {
@@ -539,7 +539,7 @@ for(int i = 1; i < nums.size(); i++)
 
 > **摩尔投票算法**
 
-![avatar](figs/46.jpeg)
+![avatar](../figs/46.jpeg)
 
 ```cpp
 class Solution {

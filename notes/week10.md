@@ -41,7 +41,7 @@ public:
 
 #### 92 - 反转链表II
 
-![avatar](figs/19.jpeg)
+![avatar](../figs/19.jpeg)
 
 这里指针反向是用记录两个指针`b`和`c`实现的 让`c->next=b`实现反转
 
@@ -166,7 +166,7 @@ public:
 
 #### 94 - 二叉树的中序遍历
 
-![avatar](figs/20.png)
+![avatar](../figs/20.png)
 
 主要记一下迭代怎么写；
 
@@ -244,7 +244,7 @@ public:
 
 #### 96 - 不同的二叉搜索树
 
-![avatar](figs/21.png)
+![avatar](../figs/21.png)
 
 这里用到的就是递推形式， 实际上这里的二叉搜索树的个数就是由上面的递推式而来的；
 

@@ -165,7 +165,7 @@ public:
 
 这题的思路还挺巧妙的, 记一下
 
-![avatar](figs/32.jpeg)
+![avatar](../figs/32.jpeg)
 
 ```cpp
 class Solution {

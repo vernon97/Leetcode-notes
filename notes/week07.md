@@ -12,7 +12,7 @@
 
 #### 61 - 旋转链表
 
-![avatar](figs/11.jpeg)
+![avatar](../figs/11.jpeg)
 
 ```cpp
 class Solution {
@@ -40,7 +40,7 @@ public:
 + DP
 ```
 
-![avatar](figs/12.jpeg)
+![avatar](../figs/12.jpeg)
 
 基础的dp，初始化第一行第一列都为1 然后状态转移方程 `f[i][j] = f[i - 1][j] + f[i][j - 1]`
 
@@ -171,7 +171,7 @@ public:
 
 这是一道模拟题;
 
-![avatar](figs/13.jpeg)
+![avatar](../figs/13.jpeg)
 
 ```cpp
 class Solution {
