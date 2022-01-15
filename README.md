@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2022-01-15 16:48:40
+ * @LastEditTime: 2022-01-15 17:02:11
  * @FilePath: /Leetcode-notes/README.md
 -->
 # Table of contents
@@ -79,3 +79,4 @@
 * [Week 35 - Leetcode 341 - 350](notes/week35.md)
 * [Week 36 - Leetcode 351 - 360](notes/week36.md)
 * [Week 37 - Leetcode 361 - 370](notes/week37.md)
+* [Week 38 - Leetcode 371 - 380](notes/week38.md)

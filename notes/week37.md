@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-06-14 00:05:39
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2022-01-15 16:56:27
+ * @LastEditTime: 2022-01-15 17:01:41
  * @FilePath: /Leetcode-notes/notes/week37.md
 -->
 # Week 37 - Leetcode 361 - 370
@@ -168,40 +168,3 @@ public:
 };
 ```
 
-### 367 - 摆动序列
-
-本题是贪心算法，思路还挺难想的；
-
-最优解就是在每个波动的波峰和波谷中选择顶点和底点，与开头结尾两个点组成的序列最长。
-
-证明过程简要来说是反证法，如果存在非顶点或低点被选中的话，这个点的附近一定存在两个比他高or比他低的点，也就是新的局部极值点，与前面的假设矛盾（大概记一下就好了）
-
-代码中的细节有两个，一个是相邻重复元素怎么去除;
-
-`nums.erase(unique(nums.begin(), nums.end()), nums.end())`
-
-原理是unique函数将重复元素交换到后面并返回迭代器，最后直接删除
-
-另一个就是判断上升趋势与下降趋势是否与之前相同的逻辑怎么写 -> **异或运算**，这里值得看一下
-
-
-```cpp
-class Solution {
-public:
-    int wiggleMaxLength(vector<int>& nums) {
-        // 1. 去除所有相邻重复元素
-        nums.erase(unique(nums.begin(), nums.end()), nums.end());
-        if(nums.size() == 1) return 1;
-        int res = 2;
-        bool is_up = nums[0] < nums[1];
-        // 2. 找到单调上升与下降区间并计数
-        for(int i = 1; i + 1 < nums.size(); i++)
-            if((nums[i] < nums[i + 1]) ^ is_up) //出现拐点
-            {
-                res++;
-                is_up = !is_up;
-            }
-        return res;
-    }
-};
-```
