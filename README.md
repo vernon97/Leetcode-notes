@@ -5,14 +5,14 @@
  * @Github: https://github.com/vernon97
  * @Date: 2020-11-20 19:46:01
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-06-29 00:43:13
- * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/README.md
+ * @LastEditTime: 2022-01-15 16:48:40
+ * @FilePath: /Leetcode-notes/README.md
 -->
 # Table of contents
 
 ```diff
-+ 恢复更新啦 找实习也暂时告一段落了
-+ 准备开始切Leetcode 300 - 500
++ 真-恢复更新了
++ 2022.01.15
 ```
 
 * ========`相关知识总结`=========

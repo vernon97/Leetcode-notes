@@ -5,8 +5,8 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-06-14 00:05:39
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-06-17 00:32:58
- * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week37.md
+ * @LastEditTime: 2022-01-15 16:46:10
+ * @FilePath: /Leetcode-notes/notes/week37.md
 -->
 # Week 37 - Leetcode 361 - 370
 
@@ -163,6 +163,29 @@ public:
             res.push_back(nums[i]);
             i = g[i];
         }
+        return res;
+    }
+};
+```
+
+### 367 - 摆动序列
+
+```cpp
+class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        // 1. 去除所有相邻重复元素
+        nums.erase(unique(nums.begin(), nums.end()), nums.end());
+        if(nums.size() == 1) return 1;
+        int res = 2;
+        bool is_up = nums[0] < nums[1];
+        // 2. 找到单调上升与下降区间并计数
+        for(int i = 1; i + 1 < nums.size(); i++)
+            if((nums[i] < nums[i + 1]) ^ is_up) //出现拐点
+            {
+                res++;
+                is_up = !is_up;
+            }
         return res;
     }
 };
