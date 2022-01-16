@@ -5,7 +5,7 @@
  * @Github: https://github.com/vernon97
  * @Date: 2021-06-17 00:32:32
  * @LastEditors: Vernon Cui
- * @LastEditTime: 2022-01-15 17:16:41
+ * @LastEditTime: 2022-01-16 17:11:31
  * @FilePath: /Leetcode-notes/notes/week38.md
 -->
 # Week 38 - Leetcode 371 - 380
@@ -187,6 +187,36 @@ public:
                 is_up = !is_up;
             }
         return res;
+    }
+};
+```
+
+### 377 - 组合总和IV
+
+回忆一下和组合问题三的区别，组合问题三中顺序不同的序列被视为相同的组合，对于这种有限制的组合问题可以用背包问题（这里是完全背包来解决）；
+
+而对于本题，顺序不同的序列被视为不同的组合，这里也是动态规划的思想，具体如下：
+
+- **状态定义：** f[i]表示总和为i的所有排列组合可能性数量
+- **状态转移：** 枚举每个元素x 在原有序列后面拼上新的元素x的话，保证和之前所有的序列不重复，所以是f[i] += f[i - x]
+
+```cpp
+class Solution {
+public:
+    vector<unsigned> f;
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        // f[a]表示总和为a的方案数
+        f = vector<unsigned>(target + 1, 0);
+        f[0] = 1;
+        for(int i = 1; i <= target; i++)
+        {
+            for(auto x : nums)
+            {
+                if(x <= i) f[i] += f[i - x]; 
+            }
+        }
+        return f[target];
     }
 };
 ```
