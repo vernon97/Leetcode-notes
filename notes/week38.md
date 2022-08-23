@@ -220,3 +220,61 @@ public:
     }
 };
 ```
+
+### 378 - 有序矩阵中的第K小元素
+
+> 每行元素均按升序排序 -> 多路归并，复杂度n^2logn 
+
+本题有额外的条件，每列元素按升序排序，且复杂度优于n^2 -> nlogn + 第K小元素，可以尝试下二分；
+
+首先判断是否满足二分的性质，对于某个元素t:
+
+- 小于等于t的元素数 < k: 则证明第K小元素 一定存在于[t + 1, matrix[n-1][n-1])
+- 小于等于t的元素数 >= k: 第K小元素 index的区间[matrix[0][0], t]
+
+> matrix[n-1][n-1]为最大值，matrix[0][0]为最小值
+
+接下来就是给定一个元素，如何计算小于等于他的元素个数：
+
+对于第一行，可以直接线性扫描得到小于等于他的元素个数；
+而对于第二行，**由于按列递增，小于等于他的元素区间一定小于上一行**；
+
+这一性质对于接下来的每一行都成立，区间是越来越小的，我们可以利用这一性质，扫描下一行的时候，直接以上一行的终点向前扫描，直到列扫描结束，或者该行所有元素都满足大于；
+
+因此，找到小于等于他元素个数的时间复杂度是**o(n)**
+
+```cpp
+class Solution {
+public:
+    int n;
+public:
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        n = matrix.size();
+        int l = matrix[0][0], r = matrix[n-1][n-1] + 1;
+        while(l < r)
+        {
+            int mid = l + r >> 1;
+            if(check(matrix, mid, k)) r = mid;
+            else l = mid + 1;
+        }
+        return l;
+
+    }
+    int  check(vector<vector<int>>& matrix, int x, int k)
+    {
+        int end = n - 1, res = 0;
+        for(int i = 0; i < n; i++)
+        {
+            auto& line = matrix[i];
+            while(end >= 0 && line[end] > x) end--;
+            res += end + 1;
+            if(res >= k || end < 0) break;
+        }
+        // cout << res << ' ' << x << endl;
+        return res >= k;
+    }
+};
+```
+
+
+
