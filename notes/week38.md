@@ -276,5 +276,54 @@ public:
 };
 ```
 
+### 380 - O(1)时间插入，删除和获取随机元素
+
+实现一个数据结构, 可以完成：
+
+- O(1)插入 -> hash
+- O(1)删除 -> hash
+- O(1)随机返回一个值，保证等概率 -> vector
+
+等概率返回可以通过数组实现，按照下标直接顺序返回就可以了，因此通过哈希+数组的双数据结构来实现，哈希表内存储元素->vector下标，问题是如何实现O(1)的删除；
+
+对于vector pop_back()操作是o(1)的，那么对于想删除元素的话，只需要交换想删除元素 与最后一个就好；
+
+```cpp
+class RandomizedSet {
+public:
+    vector<int> arr;
+    unordered_map<int, int> h;
+public:
+    RandomizedSet() {
+    }
+    
+    bool insert(int val) {
+        if(h.count(val)) return false;
+        else {
+            h[val] = (int)arr.size();
+            arr.push_back(val);
+        }
+        return true;
+    }
+    
+    bool remove(int val) {
+        if(!h.count(val)) return false;
+        int y = arr.back();
+        int px = h[val], py = h[y];
+        swap(arr[px], arr[py]);
+        swap(h[val], h[y]);
+        h.erase(val);
+        arr.pop_back();
+        return true;
+    }
+    
+    int getRandom() {
+        return arr[rand() % arr.size()];
+    }
+};
+
+```
+
+
 
 
