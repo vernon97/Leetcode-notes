@@ -288,6 +288,8 @@ public:
 
 对于vector pop_back()操作是o(1)的，那么对于想删除元素的话，只需要交换想删除元素 与最后一个就好；
 
+注意下swap和rand()怎么用
+
 ```cpp
 class RandomizedSet {
 public:
