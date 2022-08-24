@@ -301,22 +301,25 @@ public:
     
     bool insert(int val) {
         if(h.count(val)) return false;
-        else {
-            h[val] = (int)arr.size();
+        else{
+            h[val] = static_cast<int>(arr.size());
             arr.push_back(val);
         }
         return true;
     }
     
-    bool remove(int val) {
-        if(!h.count(val)) return false;
-        int y = arr.back();
-        int px = h[val], py = h[y];
-        swap(arr[px], arr[py]);
-        swap(h[val], h[y]);
-        h.erase(val);
-        arr.pop_back();
-        return true;
+    bool remove(int x) {
+        if(h.count(x)){
+            int y = arr.back();
+            int px = h[x], py = h[y]; // py 也可以等于 arr.size() - 1, 是一个道理
+            swap(arr[px], arr[py]);
+            swap(h[x], h[y]);
+            h.erase(x);
+            arr.pop_back();
+            return true;
+        }
+        return false;
+
     }
     
     int getRandom() {
