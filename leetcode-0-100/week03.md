@@ -1,26 +1,7 @@
-<!--
- * @Description: 
- * @Versions: 
- * @Author: Vernon Cui
- * @Github: https://github.com/vernon97
- * @Date: 2020-11-20 21:48:53
- * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-23 17:01:17
- * @FilePath: /Leetcode-notes/week03.md
--->
-<!--
- * @Description: 
- * @Versions: 
- * @Author: Vernon Cui
- * @Github: https://github.com/vernon97
- * @Date: 2020-11-20 21:48:53
- * @LastEditors: Vernon Cui
- * @LastEditTime: 2020-11-22 20:50:10
- * @FilePath: /Leetcode-notes/week03.md
--->
 # Week 03 - Leetcode 21 - 30
 
-#### 21 - 合并两个有序链表
+**21 - 合并两个有序链表**
+
 二路归并
 
 ```cpp
@@ -50,7 +31,8 @@ public:
 };
 ```
 
-#### 22 - 括号生成
+**22 - 括号生成**
+
 括号序合法的充分必要条件是左括号数量大于等于右括号的数量 （卡特兰数）
 
 ```cpp
@@ -77,10 +59,11 @@ public:
 };
 ```
 
-#### 23 - 合并K个升序链表
+**23 - 合并K个升序链表**
 
 K路归并， 用堆找最小值；
->__Note:__ 在C++中, 优先队列传入自定义的比较函数是传入一个自定义的Struct 重载括号
+
+> **Note:** 在C++中, 优先队列传入自定义的比较函数是传入一个自定义的Struct 重载括号
 
 ```cpp
 class Solution {
@@ -109,7 +92,7 @@ public:
 };
 ```
 
-#### 24 - 两两交换链表中的节点
+**24 - 两两交换链表中的节点**
 
 这种链表题在纸上画一画指针是怎么倒腾的；
 
@@ -132,7 +115,7 @@ public:
 };
 ```
 
-#### 25 - K个一组反转链表
+**25 - K个一组反转链表**
 
 ![avatar](../figs/01.png)
 
@@ -174,10 +157,9 @@ public:
 };
 ```
 
-#### 26 - 删除排序数组中的重复项
+**26 - 删除排序数组中的重复项**
 
-C++ 中 unique函数的实现
-遇到和前一个元素不一样的，就记录到k指的位置；
+C++ 中 unique函数的实现 遇到和前一个元素不一样的，就记录到k指的位置；
 
 ```cpp
 class Solution {
@@ -192,7 +174,7 @@ public:
 };
 ```
 
-#### 27 - 移除元素
+**27 - 移除元素**
 
 和上一题一样
 
@@ -209,12 +191,9 @@ public:
 };
 ```
 
-#### 28 - 实现strStr()
+**28 - 实现strStr()**
 
-复习一下KMP (永远记不住KMP)🆘
-KMP的数组下标从1开始 定义 ne[1] = 0， ne[i] 表示p[1...i]前后缀中最长重叠的长度（不算自己）...;
-背一下下面的这个
-__1. 求ne数组__
+复习一下KMP (永远记不住KMP)🆘 KMP的数组下标从1开始 定义 ne\[1] = 0， ne\[i] 表示p\[1...i]前后缀中最长重叠的长度（不算自己）...; 背一下下面的这个 **1. 求ne数组**
 
 ```cpp
 for(int i = 2, j = 0; i <= m; i++)
@@ -225,7 +204,7 @@ for(int i = 2, j = 0; i <= m; i++)
 }
 ```
 
-__2. KMP匹配__
+**2. KMP匹配**
 
 ```cpp
 for(int i = 1, j = 0; i <= n; i++)
@@ -268,10 +247,9 @@ public:
 };
 ```
 
-#### 29 - 两数相除
+**29 - 两数相除**
 
-只能用加减法.. 快速幂的思想
-复习一下快速幂
+只能用加减法.. 快速幂的思想 复习一下快速幂
 
 ```cpp
 int qmi(int m, int k, int p)
@@ -286,11 +264,7 @@ int qmi(int m, int k, int p)
 }
 ```
 
-这里快速幂是乘法-从小到大，除法反过来从大到小枚举
-这里边界情况还很多的 尤其要注意的是溢出问题
-比如 int -2^31取模就会溢出 所以abs的时候要强转
-1 << i 这里是先按int左移 如果超>= 32位就会溢出
-实际会按照 i% 32 进行位移
+这里快速幂是乘法-从小到大，除法反过来从大到小枚举 这里边界情况还很多的 尤其要注意的是溢出问题 比如 int -2^31取模就会溢出 所以abs的时候要强转 1 << i 这里是先按int左移 如果超>= 32位就会溢出 实际会按照 i% 32 进行位移
 
 ```cpp
 typedef long long LL;
@@ -320,11 +294,11 @@ public:
 };
 ```
 
-#### 30 - 串联所有单词的字串
+**30 - 串联所有单词的字串**
+
 ![avatar](../figs/02.jpeg)
 
-这里的额外复杂度是substr操作所带来的, C++17中引入的`std::string_view`可以一定程度上解决这个问题； `string_view  sv = s`
-__1. substr版 o(w*n)__
+这里的额外复杂度是substr操作所带来的, C++17中引入的`std::string_view`可以一定程度上解决这个问题； `string_view sv = s` **1. substr版 o(w\*n)**
 
 ```cpp
 class Solution {
@@ -363,7 +337,7 @@ public:
 };
 ```
 
-__2. 字符串哈希版 o(n)__
+**2. 字符串哈希版 o(n)**
 
 ```cpp
 typedef unsigned long long ULL;

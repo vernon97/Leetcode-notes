@@ -1,22 +1,14 @@
-<!--
- * @Description: 
- * @Versions: 
- * @Author: Vernon Cui
- * @Github: https://github.com/vernon97
- * @Date: 2021-05-05 21:07:20
- * @LastEditors: Vernon Cui
- * @LastEditTime: 2021-05-07 14:18:24
- * @FilePath: /.leetcode/Users/vernon/Leetcode-notes/notes/week33.md
--->
-# Week 33 - Leetcode 321 - 330
+# week33
 
-### 321 - 拼接最大数
+## Week 33 - Leetcode 321 - 330
+
+#### 321 - 拼接最大数
 
 首先把这个问题拆分成如下的子问题：
 
-- 枚举从第一个数组中选几个数
-- 从一个长度为m的数组中，按顺序选择k个数，使其字典序最大
-- 按顺序合并两个数组，使其字典序最大
+* 枚举从第一个数组中选几个数
+* 从一个长度为m的数组中，按顺序选择k个数，使其字典序最大
+* 按顺序合并两个数组，使其字典序最大
 
 总结一下，按顺序选择子序列使其字典序最大这样都是贪心+栈 来删除，这里和316题是一个思路 都是比较大小，能删就删
 
@@ -39,7 +31,7 @@ vector<int> maxArray(vector<int>& nums, int k)
 
 按顺序合并两个子数组使得字典序最大，也是同样的贪心思路，按大的元素合并；
 
-**如果两个元素相同的话** 则比较后面的元素 选择后面元素大的那一排 
+**如果两个元素相同的话** 则比较后面的元素 选择后面元素大的那一排
 
 代码中利用到了vector的比较大小 这里直接是按照字典序比较的 所以简洁很多 这里学习一下
 
@@ -85,7 +77,7 @@ public:
 };
 ```
 
-### 322 - 零钱兑换
+#### 322 - 零钱兑换
 
 经典的完全背包问题，完全背包就是从小到大遍历体积`v`，然后注意一下初始状态定义就好了
 
@@ -106,7 +98,7 @@ public:
 };
 ```
 
-### 324 - 摆动排序II
+#### 324 - 摆动排序II
 
 给你一个整数数组 nums，将它重新排列成 `nums[0] < nums[1] > nums[2] < nums[3]...` 的顺序
 
@@ -114,65 +106,65 @@ public:
 
 有这么几个要复习的地方：
 
-- 1. 快速选择算法
-  快速选择还记得吗？
+*
 
-  ```cpp
-  int quick_select(vector<int>& nums, int l, int r, int k)
-  {
-      if(l == r) return nums[l];
-      int x = nums[l], i = l - 1, j = r + 1;
-      while(i < j)
-      {
-          while(nums[++i] < x);
-          while(nums[--j] > x);
-          if(i < j) swap(nums[i], nums[j]);
-      }
-      int sl = j - l + 1;
-      if(k <= sl) return quick_select(nums, l, j, k);
-      else return quick_select(nums, j + 1, r, k - sl);
-  }
-  ```
-  STL中是有第k个元素选择的函数的，`nth_element(nums.begin(), *, nums.end())` 注意传入的是迭代器 而且在中间的参数
+    1. 快速选择算法 快速选择还记得吗？
 
-- 2. 荷兰国旗问题（leetcode 75）
+    ```cpp
+    int quick_select(vector<int>& nums, int l, int r, int k)
+    {
+        if(l == r) return nums[l];
+        int x = nums[l], i = l - 1, j = r + 1;
+        while(i < j)
+        {
+            while(nums[++i] < x);
+            while(nums[--j] > x);
+            if(i < j) swap(nums[i], nums[j]);
+        }
+        int sl = j - l + 1;
+        if(k <= sl) return quick_select(nums, l, j, k);
+        else return quick_select(nums, j + 1, r, k - sl);
+    }
+    ```
 
-  ```cpp
-  class Solution {
-  public:
-      void sortColors(vector<int>& nums) {
-          int i = 0, j = 0, k = nums.size() - 1;
-          while(i <= k)
-          {
-              int a = nums[i];
-              if(a == 0)
-              {
-                  swap(nums[i], nums[j]);
-                  i++, j++;
-              }
-              else if (a == 1)
-                  i++;
-              else
-                  swap(nums[k], nums[i]), k--;
-          }
-      }
-  };
-  ```
+    STL中是有第k个元素选择的函数的，`nth_element(nums.begin(), *, nums.end())` 注意传入的是迭代器 而且在中间的参数
+*
 
-**思路：**
-将所有数分成三种：小于`mid`的数、等于`mid`的数和大于`mid`的数。
-然后对数组排序，使得大于`mid`的数在最前面，等于`mid`的数在中间，小于`mid`的数在最后面。
+    1. 荷兰国旗问题（leetcode 75）
 
-这一步可以直接利用三数排序，三数排序算法可以参考`LeetCode 75. Sort Colors`。
+    ```cpp
+    class Solution {
+    public:
+        void sortColors(vector<int>& nums) {
+            int i = 0, j = 0, k = nums.size() - 1;
+            while(i <= k)
+            {
+                int a = nums[i];
+                if(a == 0)
+                {
+                    swap(nums[i], nums[j]);
+                    i++, j++;
+                }
+                else if (a == 1)
+                    i++;
+                else
+                    swap(nums[k], nums[i]), k--;
+            }
+        }
+    };
+    ```
 
-然后我们将排好序的数组重排，**将前半段依次放到奇数位置上，将后半段依次放到偶数位置上**。此时就会有：
-`nums[0] < nums[1] > nums[2] < nums[3] ...`
+**思路：** 将所有数分成三种：小于`mid`的数、等于`mid`的数和大于`mid`的数。 然后对数组排序，使得大于`mid`的数在最前面，等于`mid`的数在中间，小于`mid`的数在最后面。
+
+这一步可以直接利用三数排序，三数排序算法可以参考`LeetCode 75. Sort Colors`。
+
+然后我们将排好序的数组重排，**将前半段依次放到奇数位置上，将后半段依次放到偶数位置上**。此时就会有： `nums[0] < nums[1] > nums[2] < nums[3] ...`
 
 这一步重排我们可以在三数排序时做，只需在排序时做一个数组下标映射即可：
-> `i => (1 + 2 * i) % (n | 1)`
-该映射可以将数组前一半映射到奇数位置上，数组后一半映射到偶数位置上。
 
-> 这个下标映射显然是硬凑的 
+> `i => (1 + 2 * i) % (n | 1)` 该映射可以将数组前一半映射到奇数位置上，数组后一半映射到偶数位置上。
+
+> 这个下标映射显然是硬凑的
 
 然后记得把三路快排直接套上去，这里有个技巧可以直接按照这个映射排序即可；
 
@@ -198,13 +190,12 @@ public:
 };
 ```
 
-### 326 - 3的幂
+#### 326 - 3的幂
 
 首先 int 范围内最大的3的幂是`3 ^ 19` , 看n是否能够整除它
 
-- 如果可以，那么n的所有质因子一定都为3 是3的幂
-- 如果不可以，则一定存在非3质因子，不是3的幂
-
+* 如果可以，那么n的所有质因子一定都为3 是3的幂
+* 如果不可以，则一定存在非3质因子，不是3的幂
 
 ```cpp
 class Solution {
@@ -220,7 +211,7 @@ public:
 };
 ```
 
-### 327 - 区间和的个数
+#### 327 - 区间和的个数
 
 宇宙无敌经典的树状数组题了
 
@@ -298,7 +289,7 @@ public:
 };
 ```
 
-### 328 - 奇偶链表
+#### 328 - 奇偶链表
 
 按照奇偶位数重排成两个链表然后拼在一起就可以了 记住要置`nullptr`
 
@@ -336,7 +327,7 @@ public:
 };
 ```
 
-### 329 - 矩阵中的最长递增路径
+#### 329 - 矩阵中的最长递增路径
 
 上下左右四个方向是连通的, 要找到最长的递增路径（严格递增）
 
@@ -379,7 +370,7 @@ public:
 };
 ```
 
-### 330 - 按要求补齐数组
+#### 330 - 按要求补齐数组
 
 其实是个贪心题 贪心题就记一记方法就好
 
