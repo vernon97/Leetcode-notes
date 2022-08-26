@@ -6,9 +6,8 @@
 + 2022.08.26 上班也要刷刷
 ```
 
-更方便的阅读体验：[https://vernon97-io.gitbook.io/untitled/](https://vernon97-io.gitbook.io/untitled/)
+更方便的阅读体验：[https://vernon97-io.gitbook.io/](https://vernon97-io.gitbook.io/untitled/)
 
-[Leetcode 0 - 100](https://app.gitbook.com/s/6Rwk2d0r1ZJBzFQjnK8p/\~/changes/VdxuxZWIp9gALGhxUpxc/leetcode-0-100)
 
 * \========`相关知识总结`=========
 * [小工具-对拍程序](algorithms/小工具-对拍程序.md)
