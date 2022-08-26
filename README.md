@@ -2,9 +2,11 @@
 
 ## Table of contents
 
-{% hint style="info" %}
-2022.08.26 上班也要刷刷
-{% endhint %}
+```diff
++ 2022.08.26 上班也要刷刷
+```
+
+更方便的阅读体验：
 
 [Leetcode 0 - 100](https://app.gitbook.com/s/6Rwk2d0r1ZJBzFQjnK8p/\~/changes/VdxuxZWIp9gALGhxUpxc/leetcode-0-100)
 
