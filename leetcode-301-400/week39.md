@@ -143,6 +143,39 @@ public:
 };
 ```
 
+### 385 - 迷你语法分析器
+
+```cpp
+class Solution {
+public:
+NestedInteger deserialize(string s)
+{
+    int u = 0;
+    return dfs(s, u);
+}
+NestedInteger dfs(string& s, int& u) {
+    NestedInteger res;
+    if(s[u] == '[') {
+        u++;
+        while(s[u] != ']') res.add(dfs(s, u));
+        u++;
+        if(u < s.size() && s[u] == ',') u++;
+    } 
+    else  // 当前是数字
+    {
+        int k = u;
+        while (k < s.size() && s[k] != ',' && s[k] != ']') k++;
+        res.setInteger(stoi(s.substr(u, k - u)));
+        if (k < s.size() && s[k] == ',') k++; // 跳过逗号
+        u = k;
+    }
+    return res;
+}
+
+
+};
+```
+
 
 
 
