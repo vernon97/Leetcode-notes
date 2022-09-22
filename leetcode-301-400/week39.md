@@ -145,6 +145,8 @@ public:
 
 ### 385 - 迷你语法分析器
 
+这个递归还挺难想的 多写几次吧
+
 ```cpp
 class Solution {
 public:
@@ -171,7 +173,27 @@ NestedInteger dfs(string& s, int& u) {
     }
     return res;
 }
+};
+```
 
+### 386 - 字典序排数
+
+trie数的思想 + dfs
+
+```cpp
+class Solution {
+public:
+    vector<int> res;
+    vector<int> lexicalOrder(int n) {
+        for(int i = 1; i <= 9; i++)
+            dfs(i, n);
+        return res;
+    }
+    void dfs(int cur, int n) {
+        if(cur <= n) res.push_back(cur);
+        else return;
+        for(int i = 0; i <= 9; i++) dfs(cur * 10 + i, n);
+    }
 
 };
 ```
