@@ -3,10 +3,8 @@
 ## Table of contents
 
 ```diff
-+ 2022.08.26 上班也要刷刷
++ 2023.01.06 2023 Q1 OKR: ________
 ```
-
-更方便的阅读体验：[https://vernon97-io.gitbook.io/](https://vernon97-io.gitbook.io/untitled/)
 
 
 * \========`相关知识总结`=========
@@ -59,8 +57,8 @@
 * [Week 36 - Leetcode 351 - 360](leetcode-301-400/week36.md)
 * [Week 37 - Leetcode 361 - 370](leetcode-301-400/week37.md)
 * [Week 38 - Leetcode 371 - 380](leetcode-301-400/week38.md)
-* [Week 38 - Leetcode 381 - 390](leetcode-301-400/week39.md)
-
+* [Week 39 - Leetcode 381 - 390](leetcode-301-400/week39.md)
+* [Week 40 - Leetcode 391 - 400](leetcode-301-400/week40.md)
 * \=========`笔试题整理`==========
 * [🍑Leetcode 周赛 266场](codingtests/Leetcode-266周赛.md)
 * [🤖字节跳动夏令营2021-笔试题-机器人方向](codingtests/字节跳动-夏令营笔试-1.md)
