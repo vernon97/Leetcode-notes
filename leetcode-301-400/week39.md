@@ -198,6 +198,54 @@ public:
 };
 ```
 
+### 387 - 字符串中的第一个唯一字符
+
+这个比较简单，遍历两次即可
+
+```cpp
+class Solution {
+public:
+    int firstUniqChar(string s) {
+        vector<int> v(26, 0);
+        for(auto c : s) {
+            v[c - 'a'] ++;
+        }
+        for(int i = 0; i < s.size(); i++) {
+            if(v[s[i] - 'a'] == 1) return i;
+        }
+        return -1;
+    }
+};
+```
+
+### 388 - 文件的最长绝对路径
+
+给定一个树的遍历形式，找到最长路径 -> 这里用栈来实现，用栈的size和\t的个数来维护深度信息
+
+```cpp
+class Solution {
+public:
+    int lengthLongestPath(string input) {
+        stack<int> stk;
+        int res = 0;
+        for(int i = 0, sum = 0; i < input.size(); i ++) {
+            int k = 0;
+            while(i < input.size() && input[i] == '\t') i++, k++;
+            while(k < stk.size()) sum -= stk.top(), stk.pop();
+            int j = i;
+            while(j < input.size() && input[j] != '\n') j++;
+            stk.push(j - i);
+            sum += j - i;
+            if(input.substr(i, j - i).find('.') != -1)
+                res = max(res, sum + static_cast<int>(stk.size()) - 1);
+            i = j;
+        }
+        return res;
+    }
+
+};
+```
+
 
 
 
