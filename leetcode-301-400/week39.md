@@ -246,6 +246,47 @@ public:
 };
 ```
 
+### 389 - 找不同
 
+这个比较简单，字符串也比较短，自定义一个hash函数计算字符串的数值和就可以了
+
+```cpp
+class Solution {
+public:
+    int hash(string& s) {
+        int val = 0;
+        for(char c : s) {
+            val += c - 'a';
+        }
+        return val;
+    }
+    char findTheDifference(string s, string t) {
+        return hash(t) - hash(s) + 'a';
+    }
+};
+```
+
+### 390 - 消除游戏
+
+经典的约瑟夫问题，都是DP解法；
+
+1 - n 从左往右删的结果, 记作 f(n)
+1 - n 从右往左删的结果, 记作 g(n)
+
+对于从左往右删的结果，f(n) = 2 * g(n / 2)
+对于f(n)和g(n)而言，从左往右删的结果和从右往左删的结果应该是中心对称的，因此f(n) + g(n) = n + 1 (这里可以举几个例子验证一下)
+
+因此得到dp的递推式，记忆化搜索可以得到；
+
+```cpp
+class Solution {
+public:
+    int lastRemaining(int n) {
+        // f(n) = 2 * (n / 2 + 1 - f(n / 2))
+        if(n == 1) return 1;
+        else return 2 * (n / 2 + 1 - lastRemaining(n / 2));
+    }
+};
+```
 
 
