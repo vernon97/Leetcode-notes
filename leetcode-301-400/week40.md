@@ -132,6 +132,7 @@ public:
 
 另外判断有多少种字母和重复字符的数量都可以通过前缀和来判断，一次预处理可以判断两种；
 
+```cpp
 class Solution {
 public:
     vector<vector<int>> f;
@@ -169,6 +170,7 @@ public:
         return true;
     }
 };
+```
 
 ### 396 - 旋转函数
 
