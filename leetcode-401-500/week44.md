@@ -93,5 +93,98 @@ public:
 
 ### 435 - 无重叠区间
 
-区间问题整体复习一下吧 不过大概的思想都是按照左端点排序
+区间问题整体复习一下吧 不过大概的思想:
 
+- 区间合并/区间分组：左端点排序
+- 区间选点/最大不重叠区间：右端点排序
+
+
+```cpp
+class Solution {
+public:
+    static const int N = 1e5 + 10;
+    struct Interval{
+        int l, r;
+        bool operator<(const Interval& w) const {
+            return r < w.r;
+        }}f[N];
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        int n = intervals.size(), idx = 0, res = 0, ed = -2e9;
+        for(auto& v : intervals){
+            f[idx++] = {v[0], v[1]};
+        }
+        sort(f, f + n);
+        for(int i = 0; i < n; i++) {
+            int l = f[i].l, r = f[i].r;
+            if(ed > l) {
+                // cout << ed << ' ' << l << endl;
+                continue;
+            }
+            else {
+                // cout << r << endl;
+                ed = r;
+                res ++;
+            }
+        }
+        return n - res;
+    }
+};
+```
+
+### 436 - 寻找右区间
+
+看起来复杂，实际上就是给定一个右端点，查找最近的左端点，实际上是二分查找；
+
+二分查找就要排序，但本题是要维护原有index，可以直接在interval里插入就好了；
+
+```cpp
+class Solution {
+public:
+    vector<int> findRightInterval(vector<vector<int>>& intervals) {
+        int n = intervals.size();
+        for(int i = 0; i < n; i++) intervals[i].push_back(i);
+        sort(intervals.begin(), intervals.end());
+        vector<int> res(n, -1);
+        for(int i = 0; i < n; i++) {
+            auto& iv = intervals[i];
+            int iv_left = iv[0], iv_right = iv[1], iv_idx = iv[2];
+            int l = 0, r = n - 1;
+            while(l < r) {
+                int mid = l + r >> 1;
+                if(intervals[mid][0] >= iv_right) r = mid;
+                else l = mid + 1;
+            }
+            if(intervals[r][0] >= iv_right) res[iv_idx] = intervals[r][2];
+        }
+        return res;
+    }
+};
+```
+
+### 438 - 找到字符串中所有字母异位词
+
+滑动窗口，注意下成功的判断即可
+
+```cpp
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> res;
+        if(p.size() > s.size()) return res;
+        unordered_map<char, int> hs, hp;
+        for(char c : p) hp[c]++;
+        int suc = hp.size();
+        for(int i = 0, j = 0; i < s.size(); i++) {
+            hs[s[i]]++;
+            if(hp[s[i]] > 0 && hs[s[i]] == hp[s[i]]) suc--;
+            if(suc == 0) res.push_back(j);
+            if(i - j + 2 > p.size()) {
+                char c = s[j++];
+                if(hs[c] == hp[c]) suc++;
+                hs[c]--;
+            }
+        }
+        return res;
+    }
+};
+```

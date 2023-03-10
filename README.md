@@ -60,7 +60,11 @@
 * [Week 39 - Leetcode 381 - 390](leetcode-301-400/week39.md)
 * [Week 40 - Leetcode 391 - 400](leetcode-301-400/week40.md)
 * \=========`401 ~ 500`==========
-* [Week 41 - Leetcode 401 - 500](leetcode-401-500/week41.md)
+* [Week 41 - Leetcode 401 - 410](leetcode-401-500/week41.md)
+* [Week 42 - Leetcode 411 - 420](leetcode-401-500/week42.md)
+* [Week 43 - Leetcode 421 - 430](leetcode-401-500/week43.md)
+* [Week 44 - Leetcode 431 - 440](leetcode-401-500/week44.md)
+* [Week 45 - Leetcode 441 - 450](leetcode-401-500/week45.md)
 * \=========`笔试题整理`==========
 * [🍑Leetcode 周赛 266场](codingtests/Leetcode-266周赛.md)
 * [🤖字节跳动夏令营2021-笔试题-机器人方向](codingtests/字节跳动-夏令营笔试-1.md)
