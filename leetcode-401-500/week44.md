@@ -188,3 +188,54 @@ public:
     }
 };
 ```
+
+### 440 - 字典序的第K小数字
+
+数位统计类型-按位枚举
+
+calculate(prefix, n); 以指定的前缀prefix，直到n一共有多少种数字；
+
+如果种类大于k，则最终的答案不是以这个prefix开头的，找下一个（prefix ++），并在k里面去掉原prefix对应的种类数sz
+
+如果种类小于k，则最终的答案一定是以这个prefix开头的，往后补一个0继续向后查找即可（这里指定的prefix自己也算一个，所以要k--
+
+calculate函数也是按位枚举的思想，对应的prefix后面拼接一位，种类就是0-9共十种，两位就是0-99共一百种，以此类推
+
+直到再拼一位就超过n了的话，这里有两种可能，我举个例子：
+
+20 - 29 对应n = 37
+30 - 37 对应n = 37
+
+所以要判断当前prefix和n的关系，决定是加 n - t + 1 还是加k；
+
+```cpp
+class Solution {
+public:
+    int calculate(int prefix, int n) {
+        long long res = 0, t = prefix, k = 1;
+        while(t * 10 <= n) {
+            res += k;
+            t *= 10;
+            k *= 10;
+        }
+        if(n - t < k) res += n - t + 1;
+        else res += k;
+        return res;
+    }
+    int findKthNumber(int n, int k) {
+        int prefix = 1;
+        while(k > 1) {
+            int sz = calculate(prefix, n);
+            if(k > sz){
+                prefix++;
+                k -= sz;
+            } else {
+                prefix = prefix * 10;
+                k--;
+            }
+        }
+        return prefix;
+
+    }
+};
+```
