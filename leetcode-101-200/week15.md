@@ -430,6 +430,53 @@ public:
 };
 ```
 
+补一个自底向上的，满足空间复杂度o(1) -> 上面那个用到了系统栈，实际上是o(logn)
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        //很不熟练，利用自底向上的归并思想，每次先归并好其中一小段，之后对两小段之间进行归并
+        int n = 0;
+        for(auto p = head; p ; p = p->next) n ++;
+
+        auto dummy = new ListNode(-1);
+        dummy->next = head;
+        for(int i = 1; i < n; i *= 2 ){ //每次归并段的长度，每次长度依次为1,2,4,8...n/2
+        //小于n是因为等于n时说明所有元素均归并完毕，大于n时同理
+            auto cur = dummy;
+            for(int j = 1;j + i <= n; j += 2 * i){//j代表每一段的开始，每次将两段有序段归并为一个大的有序段，故而每次+2i
+            //必须保证每段中间序号是小于链表长度的，显然，如果大于表长，就没有元素可以归并了
+                auto p = cur->next,q = p;//p表示第一段的起始点，q表示第二段的起始点，之后开始归并即可
+                for(int k = 0; k < i; k ++) q = q->next;
+                //x,y用于计数第一段和第二段归并的节点个数，由于当链表长度非2的整数倍时表长会小于i,故而需要加上p && q的边界判断
+                 int x = 0, y = 0;
+                 while(x < i && y < i && p && q){
+                     if(p->val <= q->val) cur = cur->next = p,p = p->next,x ++; //等号的赋值顺序为从右到左，故而该句意思为
+                     //cur->next = p,cur = cur->next,即将小的一点插入cur链表中
+                     else cur = cur->next = q,q = q->next,y++;
+                 }
+                //归并排序基本套路
+                 while(x < i && p) cur = cur->next = p,p = p->next,x ++;
+                 while(y < i && q) cur = cur->next = q,q = q->next,y ++;
+                 cur->next = q; //记得把排好序的链表尾链接到下一链表的表头，循环完毕后q为下一链表表头
+            }
+        } 
+        return dummy->next;
+    }
+};
+```
+
 #### 149 - 直线上最多的点数
 
 枚举中心点 -> 枚举斜率

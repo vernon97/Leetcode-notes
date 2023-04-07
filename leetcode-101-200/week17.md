@@ -27,7 +27,7 @@ public:
             int mid = l + r >> 1;
             //if(mid == n || nums[mid] > nums[mid + 1]) r = mid;
             // 这里mid一定不会取到n 为什么 ： 反证法
-            if(nums[mid > nums[mid + 1]]) r = mid;
+            if(nums[mid] > nums[mid + 1]) r = mid;
             else l = mid + 1;
         }
         return l;
