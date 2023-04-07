@@ -210,6 +210,31 @@ public:
 };
 ```
 
+
+另外补一个动态规划的o(n^2)算法，注意下遍历顺序是长度-> 起点即可
+
+```cpp
+class Solution {
+public:
+    static const int N = 1010;
+    bool f[N][N];
+    string longestPalindrome(string s) {
+        memset(f, false, sizeof f);
+        int n = s.size();
+        int max_len = 0, start = 0;
+        for(int l = 1; l <= n; l++)
+            for(int i = 0; i + l - 1 < n; i++){
+                int left = i, right = i + l - 1;
+                if(l == 1) f[left][right] = true;
+                else if(l == 2) f[left][right] = (s[left] == s[right]);
+                else f[left][right] = f[left + 1][right - 1] && (s[left] == s[right]);
+                if(f[left][right] && l > max_len) max_len = l, start = left;
+            }
+        return s.substr(start, max_len);
+    }
+};
+```
+
 #### 06 - Z字形变换
 
 等差数列找规律的问题 注意开一个字符串数组 别用+
