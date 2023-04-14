@@ -36,7 +36,7 @@
 * [Week 17 - Leetcode 161 - 170](leetcode-101-200/week17.md)
 * [Week 18 - Leetcode 171 - 180](leetcode-101-200/week18.md)
 * [Week 19 - Leetcode 181 - 190](leetcode-101-200/week19.md)
-* [Week 20 - Leetcode 191 - 200](leetcode-101-200/week20.md)
+* [Week 20 - Leetcode 191 - 200](leetcode-201-300/week20.md)
 * \=========`201 ~ 300`==========
 * [Week 21 - Leetcode 201 - 210](leetcode-201-300/week21.md)
 * [Week 22 - Leetcode 211 - 220](leetcode-201-300/week22.md)
@@ -47,7 +47,7 @@
 * [Week 27 - Leetcode 261 - 270](leetcode-201-300/week27.md)
 * [Week 28 - Leetcode 271 - 280](leetcode-201-300/week28.md)
 * [Week 29 - Leetcode 281 - 290](leetcode-201-300/week29.md)
-* [Week 30 - Leetcode 291 - 300](leetcode-201-300/week30.md)
+* [Week 30 - Leetcode 291 - 300](leetcode-301-400/week30.md)
 * \=========`301 ~ 400`==========
 * [Week 31 - Leetcode 301 - 310](leetcode-301-400/week31.md)
 * [Week 32 - Leetcode 311 - 320](leetcode-301-400/week32.md)
